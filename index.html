@@ -27,10 +27,14 @@
       .toolbar p { margin:0; color:var(--muted); font-size:.9rem; }
       button { border:1px solid #b8c5d5; border-radius:8px; padding:8px 11px; color:var(--navy); background:#fff; font:inherit; font-size:.85rem; font-weight:700; cursor:pointer; }
       button:hover { border-color:var(--aqua); color:var(--aqua); }
-      .table-wrap { overflow-x:auto; }
-      table { width:100%; min-width:1280px; border-collapse:collapse; }
-      th { padding:12px 14px; color:#506079; background:#f7f9fc; border-bottom:1px solid var(--line); text-align:left; font-size:.73rem; letter-spacing:.07em; text-transform:uppercase; white-space:nowrap; }
+      .table-wrap { overflow:auto; max-height:calc(100vh - 150px); }
+      table { width:100%; min-width:1420px; border-collapse:collapse; }
+      th { padding:12px 14px; color:#506079; background:#f7f9fc; border-bottom:1px solid var(--line); text-align:left; font-size:.73rem; letter-spacing:.07em; text-transform:uppercase; white-space:nowrap; position:sticky; top:0; z-index:2; box-shadow:0 1px 0 var(--line); }
       td { padding:13px 14px; border-bottom:1px solid #e8edf3; vertical-align:top; }
+      .roles-cell div { white-space:nowrap; }
+      .roles-cell div + div { margin-top:3px; }
+      .roles-cell .primary { color:var(--navy); font-weight:760; }
+      .roles-cell .alt { color:#42506a; font-size:.84rem; }
       tbody tr:last-child td { border-bottom:0; }
       tbody tr:hover { background:#fbfcfe; }
       .company { color:var(--navy); font-weight:760; }
@@ -84,7 +88,7 @@
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Deadline</th><th>Company</th><th>Role</th><th>Sector</th><th>Match</th><th>Current status</th><th>Application / JD</th><th>CV (tailored)</th><th>Cover letter</th></tr></thead>
+            <thead><tr><th>Deadline</th><th>Company</th><th>Role (linked JD)</th><th>Suitable roles</th><th>Sector</th><th>Match</th><th>Current status</th><th>Application / JD</th><th>CV (tailored)</th><th>Cover letter</th></tr></thead>
             <tbody id="application-rows"></tbody>
           </table>
         </div>
@@ -103,6 +107,48 @@
     </main>
     <script>
       const N = null;
+      const rolesMap = {
+        'jpm-ibd': ['Investment Banking Summer Analyst','Asset Management Summer Intern','Global Payments Summer Analyst','Private Bank Investment Solutions Intern'],
+        'jpm-am': ['Asset Management Summer Intern','Investment Banking Summer Analyst','Global Payments Summer Analyst','Private Bank Investment Solutions Intern'],
+        'blackrock': ['2027 Summer Internship Program (Investments / Fintech / Business tracks)'],
+        'jane-street': ['QR / Trading Intern','Software Engineer Intern','Strategy & Product Intern'],
+        'point72-academy': ['Academy Investment Analyst','Cubist / Systematic Quantitative Researcher'],
+        'bofa-gqs': ['Global Quantitative Strategies Summer Associate','Global Markets Summer Analyst (QR / S&T)','Global IB Summer Analyst'],
+        'millennium': ['Quantitative Researcher Intern','Quantitative Developer Intern'],
+        'citadel': ['Quantitative Trader Intern','Quantitative Researcher Intern','Software Engineer Intern (Asia)'],
+        'optiver': ['Quantitative Intern','Trading Intern','Software Engineering Intern (Sydney / Taipei)'],
+        'sig-qst': ['Quantitative Systematic Trading Intern (Master\u2019s)','Quantitative Research Intern','Software Engineer Intern'],
+        'imc-qr': ['Quantitative Researcher Intern','Quantitative Trader Intern','Software Engineer Intern'],
+        'imc-swe': ['Software Engineer Intern (Strategy)','Quantitative Researcher Intern','Quantitative Trader Intern'],
+        'deshaw': ['Quantitative Analyst Intern','Software Developer Intern'],
+        'gs-apac': ['Summer Analyst \u2014 Strats (FICC / Equities Quant)','Summer Analyst \u2014 Securities (S&T)','Summer Analyst \u2014 Investment Banking / Engineering'],
+        'ms-ied-quant': ['IED Quantitative Finance Summer Analyst / Associate','Institutional Securities Quant Summer Analyst','Technology Summer Analyst'],
+        'citi-ib': ['Investment Banking Summer Analyst','Markets Summer Analyst','Markets Quantitative Analysis Summer Analyst (check portal)'],
+        'wellsfargo': ['APAC Banking Summer Analyst'],
+        'twosigma': ['Quantitative Research Intern','Quantitative Developer / Engineering Intern'],
+        'hsbc': ['Global Markets Sales & Trading Summer Intern','Global Investment Research Summer Intern','Commercial Banking Summer Intern'],
+        'pimco': ['APAC Summer Internship (Investments)','Portfolio Associate Intern'],
+        'schroders': ['Investment Summer Internship','Data & Quant Summer Internship'],
+        'aqr': ['Research Summer Analyst','Portfolio Implementation Summer Analyst','Trading Analyst Intern'],
+        'barclays-qa': ['Quantitative Analytics Off-Cycle Internship','Electronic Trading Summer Internship','Markets Summer Internship'],
+        'barclays-et': ['Electronic Trading Summer Internship','Quantitative Analytics Off-Cycle Internship','Markets Summer Internship'],
+        'ubs-quant': ['Investment Bank Quants Off-Cycle Internship','Global Markets Summer Intern (Strats track)'],
+        'db-summer': ['FIC Quant Summer Intern','Global Markets Summer Intern','IBD / Capital Markets Summer Intern'],
+        'nomura': ['Markets (Quant) Summer Analyst','IBD Summer Analyst'],
+        'fidelity': ['Investment Directing Summer Intern','Equity Research Summer Intern'],
+        'ares': ['Summer Internship (Credit / PE tracks)'],
+        'drw': ['Quantitative Analyst Intern','Software Engineer Intern'],
+        'flowtraders': ['Trading Intern','Quant / Dev Intern'],
+        'mako': ['Quantitative Research Intern','Software Engineer Intern'],
+        'dv': ['Software Developer Intern (Equities)','Quantitative Analyst Intern'],
+        'squarepoint': ['Intern Quant Researcher','Intern Quant Developer'],
+        'worldquant': ['Research Consultant (BRAIN, remote)','Quantitative Analyst Intern (HK)'],
+        'jefferies-macquarie': ['Markets / Quant Summer Intern (Jefferies & Macquarie)','IBD Summer Intern'],
+        'ubiquant': ['\u91cf\u5316\u7814\u7a76\u5b9e\u4e60\u751f','\u91cf\u5316\u5f00\u53d1\u5b9e\u4e60\u751f'],
+        'highflyer': ['\u91cf\u5316\u7814\u7a76\u5b9e\u4e60\u751f','\u6df1\u5ea6\u5b66\u4e60\u5b9e\u4e60\u751f'],
+        'minghong': ['\u91cf\u5316\u7814\u7a76\u5b9e\u4e60\u751f','\u91cf\u5316\u5f00\u53d1\u5b9e\u4e60\u751f'],
+        'dymon': ['Quantitative Researcher (return offer)','Quantitative Developer']
+      };
       const portalIds = ['deshaw','citadel','optiver','twosigma','drw','flowtraders','mako','dv','squarepoint','worldquant','aqr','jefferies-macquarie','ubiquant','highflyer','minghong','dymon','nomura','fidelity','pimco','schroders','ares','hsbc'];
       const applications = [
         {id:'jpm-ibd',deadline:'2026-09-29',closed:false,est:false,company:'J.P. Morgan',role:'Investment Banking Summer Analyst 2027, Hong Kong',sector:'Bank (sell-side)',match:'medium',url:'https://www.jpmorganchase.com/careers/explore-opportunities/programs/investment-banking-summer-analyst',cv:'cv/Xu_Jingxiang_JPMorgan_IBD_CV.pdf',cl:N},
@@ -176,6 +222,7 @@
             <td>${deadlineCell}</td>
             <td><span class="company">${escapeHtml(app.company)}</span></td>
             <td class="role">${escapeHtml(app.role)}</td>
+            <td class="roles-cell">${(rolesMap[app.id] || [app.role]).map((r, i) => `<div class="${i === 0 ? 'primary' : 'alt'}">${escapeHtml(r)}</div>`).join('')}</td>
             <td><span class="sector">${escapeHtml(app.sector)}</span></td>
             <td><span class="match match-${app.match}">${app.match === 'high' ? 'High match' : 'Medium match'}</span></td>
             <td><select class="${classFor(status)} data-status">${options}</select></td>
