@@ -131,7 +131,7 @@ def build(path, role, template):
                             title=f"Jing Xiang Xu - {role}", author="Jing Xiang Xu")
     story = [
         Paragraph("<b>JING XIANG XU</b>", ss["name"]),
-        Paragraph("Hong Kong &nbsp;\u00b7&nbsp; jx466@cornell.edu &nbsp;\u00b7&nbsp; +1 607-882-5108 &nbsp;\u00b7&nbsp; Available June \u2013 August 2027", ss["contact"]),
+        Paragraph("Hong Kong &nbsp;\u00b7&nbsp; jx466@cornell.edu &nbsp;\u00b7&nbsp; +852 6810 9521 (HK) / +1 607-882-5108 &nbsp;\u00b7&nbsp; Available June \u2013 August 2027", ss["contact"]),
         Paragraph(f"Applying: <b>{role}</b> &nbsp;\u00b7&nbsp; Penultimate-year Master\u2019s student graduating Dec 2027", ss["headline"]),
         Spacer(1, 2),
     ]
