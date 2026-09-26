@@ -41,6 +41,10 @@ LETTERS = [
   "hit rate on three live rebalances. Earlier roles at Nine Martingale and Northeast Securities added factor backtesting, Barra "
   "exposure analysis, and Monte Carlo risk-parity optimization \u2014 the modeling toolkit BofA GQS applies to derivatives, "
   "electronic markets and risk analytics.",
+  "I fit the program\u2019s stated profile directly: object-oriented programming in Python and C++; hands-on AI/ML experience "
+  "(embedding-based retrieval and LLM-assisted research pipelines in production internships); a Mathematics degree with CS minor "
+  "from HKU now deepened by Cornell financial engineering; and native Mandarin on top of fluent English \u2014 the additional "
+  "Asian language the posting flags as advantageous, and daily currency for covering APAC markets from Hong Kong.",
   "What draws me to GQS specifically is the chance to work at the intersection of quantitative research and client-facing "
   "solutions in APAC markets I already know deeply, within a bank whose Hong Kong franchise sits at the center of regional "
   "capital flows."]),

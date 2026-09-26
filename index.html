@@ -14,7 +14,7 @@
       .masthead { display:flex; justify-content:space-between; gap:24px; align-items:flex-end; padding:12px 4px 26px; }
       h1 { margin:0; color:var(--navy); font-size:clamp(1.7rem,3vw,2.45rem); letter-spacing:-.04em; line-height:1.08; }
       .eyebrow { margin:0 0 7px; color:var(--aqua); font-weight:750; font-size:.78rem; letter-spacing:.11em; text-transform:uppercase; }
-      .subtitle { max-width:800px; margin:10px 0 0; color:var(--muted); }
+      .subtitle { max-width:860px; margin:10px 0 0; color:var(--muted); }
       .save-note { max-width:330px; color:var(--muted); font-size:.86rem; text-align:right; }
       .save-note strong { color:var(--aqua); }
       .metrics { display:grid; grid-template-columns:repeat(7,minmax(115px,1fr)); gap:12px; margin-bottom:18px; }
@@ -31,10 +31,6 @@
       table { width:100%; min-width:1420px; border-collapse:collapse; }
       th { padding:12px 14px; color:#506079; background:#f7f9fc; border-bottom:1px solid var(--line); text-align:left; font-size:.73rem; letter-spacing:.07em; text-transform:uppercase; white-space:nowrap; position:sticky; top:0; z-index:2; box-shadow:0 1px 0 var(--line); }
       td { padding:13px 14px; border-bottom:1px solid #e8edf3; vertical-align:top; }
-      .roles-cell div { white-space:nowrap; }
-      .roles-cell div + div { margin-top:3px; }
-      .roles-cell .primary { color:var(--navy); font-weight:760; }
-      .roles-cell .alt { color:#42506a; font-size:.84rem; }
       tbody tr:last-child td { border-bottom:0; }
       tbody tr:hover { background:#fbfcfe; }
       .company { color:var(--navy); font-weight:760; }
@@ -54,6 +50,11 @@
       select.status-oa { border-color:#efd49c; color:#8a5a00; background:#fffaf0; }
       select.status-received { border-color:#a9ded6; color:#08756b; background:#f2fcfa; }
       select.status-progress { border-color:#b9c8f1; color:#3455a0; background:#f5f7ff; }
+      .roles-cell div { white-space:nowrap; }
+      .roles-cell div + div { margin-top:3px; }
+      .roles-cell .primary { color:var(--navy); font-weight:760; }
+      .roles-cell .alt { color:#42506a; font-size:.84rem; }
+      .warn { color:var(--rose); font-weight:700; }
       .cv-note { margin:18px 4px 0; padding:14px 18px; border:1px solid var(--line); border-radius:13px; background:#fff; box-shadow:var(--shadow); color:var(--muted); font-size:.9rem; }
       .footer { display:flex; justify-content:space-between; gap:20px; margin:18px 4px 0; color:var(--muted); font-size:.82rem; }
       @media (max-width:900px) { .metrics { grid-template-columns:repeat(3,1fr); } .masthead { align-items:flex-start; flex-direction:column; } .save-note { text-align:left; } }
@@ -66,7 +67,7 @@
         <div>
           <p class="eyebrow">Hong Kong · Summer 2027 · Buy-side &amp; Sell-side</p>
           <h1>HK internship application dashboard</h1>
-          <p class="subtitle">Sorted by application deadline, earliest first. Nothing has been submitted yet &mdash; all statuses start at &ldquo;Not started&rdquo;. Each row links to the application portal, a CV tailored to that company&rsquo;s role, and a cover letter where the employer asks for one.</p>
+          <p class="subtitle">Each row is one selected application. Where an employer caps applications per region (BofA: max 2 APAC) or encourages a single application (IMC, Jane Street, GS one-app-multi-division), the selection respects that rule; otherwise up to the 3 best-fit roles are listed per company. Sorted by deadline.</p>
         </div>
         <div class="save-note" id="save-note">Edits are saved <strong>only in this browser</strong> and can be reset below.</div>
       </header>
@@ -83,120 +84,115 @@
 
       <section class="panel" aria-labelledby="tracker-title">
         <div class="toolbar">
-          <p id="tracker-title">Links marked <b>Apply</b> go to the exact job posting or program application page; <b>Search portal</b> links land on the employer&rsquo;s filtered careers search where the HK 2027 posting appears seasonally. &ldquo;est.&rdquo; deadlines are from prior cycles &mdash; verify before relying on them.</p>
+          <p id="tracker-title"><b>Apply</b> = exact job posting / application page; <b>Search portal</b> = employer&rsquo;s filtered careers search (HK 2027 postings appear seasonally). <span class="warn">Red notes</span> flag eligibility caveats. &ldquo;est.&rdquo; deadlines from prior cycles &mdash; verify.</p>
           <button type="button" id="reset-statuses">Reset browser edits</button>
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Deadline</th><th>Company</th><th>Role (linked JD)</th><th>Suitable roles</th><th>Sector</th><th>Match</th><th>Current status</th><th>Application / JD</th><th>CV (tailored)</th><th>Cover letter</th></tr></thead>
+            <thead><tr><th>Deadline</th><th>Company</th><th>Role (linked JD)</th><th>Other selected / suitable roles</th><th>Sector</th><th>Match</th><th>Current status</th><th>Application / JD</th><th>CV (tailored)</th><th>Cover letter</th></tr></thead>
             <tbody id="application-rows"></tbody>
           </table>
         </div>
       </section>
 
       <div class="cv-note">
-        <strong>JD-verified CV checks (2026-09-26):</strong>
-        <b>BofA GQS</b> requires penultimate Master&rsquo;s/PhD in Math/Eng/Physics/CS, OOP programming, AI/ML exposure, English + Asian language &mdash; CV: MEng FE, Python/C++, DeepSeek/BGE ML pipelines, Mandarin ✓ (deadline Sep 30).
-        <b>Barclays ET</b> requires postgrad degree, Dec 2027&ndash;Jun 2028 graduation, GPA 3.2+, Java/C++/Python &mdash; CV states Dec 2027 graduation, GPA 3.74, C++/Python ✓ (declared HK work rights on application).
-        <b>Millennium</b> QR intern: grad Dec 2027&ndash;Jul 2028, GPA 3.5+ &mdash; CV shows Dec 2027 + 3.74 ✓.
-        <b>SIG QST</b> targets Master&rsquo;s students, Jun 2027 start ✓.
-        All CVs state penultimate-year status (graduating Dec 2027) and June&ndash;August 2027 availability, which is the eligibility criterion every verified JD screens for.
-        <br/><strong>Differentiation:</strong> quant-research template for funds, markets/execution for prop traders, pricing&amp;risk for banks, investment-research for asset managers, each headed with the exact role title. Cover letters exist only for the 13 employers that request or weigh one.
+        <strong>JD-verified checks &amp; CV alignment (2026-09-26):</strong>
+        <b>BofA GQS</b> (penultimate Master&rsquo;s/PhD, Math/Eng/Physics/CS, OOP, AI/ML, English+Asian language; deadline Sep 30; <b>APAC cap: 2 programs</b> &mdash; GQS + Global Markets S&amp;T = your two): CV covers all via MEng FE, Python/C++, DeepSeek/BGE ML pipelines, Mandarin ✓.
+        <b>JPM Markets SA &amp; Research</b> (grad Sep 2027&ndash;Jul 2028 ✓ Dec 2027; Mandarin desks flagged in JD ✓ native): CV states Dec 2027 graduation + availability Jun&ndash;Aug 2027.
+        <span class="warn"><b>JPM Markets QR Off-Cycle: JD says &ldquo;expected graduation beyond December 2027&rdquo; &mdash; you graduate exactly Dec 2027, borderline; apply early + email the recruiter to confirm.</span></span>
+        <b>Barclays ET</b> (postgrad, Dec 2027&ndash;Jun 2028, GPA 3.2+, Java/C++/Python ✓). <b>Millennium</b> (Dec 2027&ndash;Jul 2028, GPA 3.5+ ✓ 3.74). <b>SIG QST</b> (Master&rsquo;s, Jun 2027 start ✓). <b>IMC / Jane Street / GS</b>: single-application cultures &mdash; one row each, roles column shows what the one application covers.
       </div>
       <footer class="footer"><span>All applications unsubmitted as of compilation. BlackRock HK closed 2026-09-20 (kept for record).</span><span>Links &amp; JD requirements re-verified: 2026-09-26</span></footer>
     </main>
     <script>
       const N = null;
       const rolesMap = {
-        'jpm-ibd': ['Global Investment Banking Summer Analyst','Markets Quant Trading & Research \u2014 Off-Cycle (quant)','Markets Summer Analyst (S&T)','Markets Summer Analyst \u2014 Research','Asset Management Summer Intern','Corporate Analyst Development Program','Global Payments Summer Analyst','Private Bank Advisor / Investment Solutions Intern'],
-        'jpm-mqr': ['Markets Quant Trading & Research \u2014 Off-Cycle (quant)','Markets Summer Analyst (S&T)','Markets Summer Analyst \u2014 Research','Global Investment Banking Summer Analyst','Asset Management Summer Intern','Corporate Analyst Development Program','Global Payments Summer Analyst','Private Bank Advisor / Investment Solutions Intern'],
-        'jpm-markets': ['Markets Summer Analyst (S&T)','Markets Quant Trading & Research \u2014 Off-Cycle (quant)','Markets Summer Analyst \u2014 Research','Global Investment Banking Summer Analyst','Asset Management Summer Intern','Corporate Analyst Development Program','Global Payments Summer Analyst','Private Bank Advisor / Investment Solutions Intern'],
-        'jpm-markets-research': ['Markets Summer Analyst \u2014 Research','Markets Quant Trading & Research \u2014 Off-Cycle (quant)','Markets Summer Analyst (S&T)','Global Investment Banking Summer Analyst','Asset Management Summer Intern','Corporate Analyst Development Program','Global Payments Summer Analyst','Private Bank Advisor / Investment Solutions Intern'],
-        'jpm-am': ['Asset Management Summer Intern','Markets Quant Trading & Research \u2014 Off-Cycle (quant)','Markets Summer Analyst (S&T)','Markets Summer Analyst \u2014 Research','Global Investment Banking Summer Analyst','Corporate Analyst Development Program','Global Payments Summer Analyst','Private Bank Advisor / Investment Solutions Intern'],
-        'blackrock': ['2027 Summer Internship Program (Investments / Fintech / Business tracks)'],
-        'jane-street': ['QR / Trading Intern','Software Engineer Intern','Strategy & Product Intern'],
-        'point72-academy': ['Academy Investment Analyst','Cubist / Systematic Quantitative Researcher'],
-        'bofa-gqs': ['Global Quantitative Strategies Summer Associate','Global Markets Summer Analyst (QR / S&T)','Global IB Summer Analyst'],
-        'millennium': ['Quantitative Researcher Intern','Quantitative Developer Intern'],
-        'citadel': ['Quantitative Trader Intern','Quantitative Researcher Intern','Software Engineer Intern (Asia)'],
-        'optiver': ['Quantitative Intern','Trading Intern','Software Engineering Intern (Sydney / Taipei)'],
-        'sig-qst': ['Quantitative Systematic Trading Intern (Master\u2019s)','Quantitative Research Intern','Software Engineer Intern'],
-        'imc-qr': ['Quantitative Researcher Intern','Quantitative Trader Intern','Software Engineer Intern'],
-        'imc-swe': ['Software Engineer Intern (Strategy)','Quantitative Researcher Intern','Quantitative Trader Intern'],
-        'deshaw': ['Quantitative Analyst Intern','Software Developer Intern'],
-        'gs-apac': ['Summer Analyst \u2014 Strats (FICC / Equities Quant)','Summer Analyst \u2014 Securities (S&T)','Summer Analyst \u2014 Investment Banking / Engineering'],
-        'ms-ied-quant': ['IED Quantitative Finance Summer Analyst / Associate','Institutional Securities Quant Summer Analyst','Technology Summer Analyst'],
-        'citi-ib': ['Investment Banking Summer Analyst','Markets Summer Analyst','Markets Quantitative Analysis Summer Analyst (check portal)'],
+        'jpm-mqr': ['Markets Quant Trading & Research \u2014 Off-Cycle (this application)','Markets Summer Analyst (S&T)','Markets Summer Analyst \u2014 Research'],
+        'jpm-markets': ['Markets Summer Analyst (S&T) (this application)','Markets Quant Trading & Research \u2014 Off-Cycle','Markets Summer Analyst \u2014 Research'],
+        'jpm-markets-research': ['Markets Summer Analyst \u2014 Research (this application)','Markets Quant Trading & Research \u2014 Off-Cycle','Markets Summer Analyst (S&T)'],
+        'bofa-gqs': ['Global Quantitative Strategies Summer Associate (this application; APAC slot 1 of 2)','Global Markets S&T Rotational Summer Analyst (APAC slot 2 of 2)'],
+        'bofa-markets': ['Global Markets S&T Rotational Summer Analyst (this application; APAC slot 2 of 2)','Global Quantitative Strategies Summer Associate (APAC slot 1 of 2)'],
+        'gs-apac': ['One application \u2014 rank up to 4 divisions: Strats (FICC/Equities Quant) first, then Securities (S&T), Engineering, IBD'],
+        'ms-ied-quant': ['IED Quantitative Finance Summer Analyst/Associate (this application)','Technology Summer Analyst','Institutional Securities Quant (check portal)'],
+        'barclays-qa': ['Quantitative Analytics Off-Cycle (this application)','Electronic Trading Summer Internship (separate row)'],
+        'barclays-et': ['Electronic Trading Summer Internship (this application)','Quantitative Analytics Off-Cycle (separate row)'],
+        'ubs-quant': ['IB Quants Off-Cycle Internship','Global Markets Summer Intern (Strats track)'],
+        'db-summer': ['FIC Quant track','Global Markets','IBD / Capital Markets (one programme application)'],
+        'hsbc': ['Global Markets Sales & Trading Summer Intern (best fit)','Global Investment Research Summer Intern','Commercial Banking Summer Intern'],
+        'citi-ib': ['Investment Banking Summer Analyst (this application)','Markets Summer Analyst','Markets Quantitative Analysis (check portal)'],
         'wellsfargo': ['APAC Banking Summer Analyst'],
-        'twosigma': ['Quantitative Research Intern','Quantitative Developer / Engineering Intern'],
-        'hsbc': ['Global Markets Sales & Trading Summer Intern','Global Investment Research Summer Intern','Commercial Banking Summer Intern'],
-        'pimco': ['APAC Summer Internship (Investments)','Portfolio Associate Intern'],
-        'schroders': ['Investment Summer Internship','Data & Quant Summer Internship'],
-        'aqr': ['Research Summer Analyst','Portfolio Implementation Summer Analyst','Trading Analyst Intern'],
-        'barclays-qa': ['Quantitative Analytics Off-Cycle Internship','Electronic Trading Summer Internship','Markets Summer Internship'],
-        'barclays-et': ['Electronic Trading Summer Internship','Quantitative Analytics Off-Cycle Internship','Markets Summer Internship'],
-        'ubs-quant': ['Investment Bank Quants Off-Cycle Internship','Global Markets Summer Intern (Strats track)'],
-        'db-summer': ['FIC Quant Summer Intern','Global Markets Summer Intern','IBD / Capital Markets Summer Intern'],
-        'nomura': ['Markets (Quant) Summer Analyst','IBD Summer Analyst'],
-        'fidelity': ['Investment Directing Summer Intern','Equity Research Summer Intern'],
-        'ares': ['Summer Internship (Credit / PE tracks)'],
-        'drw': ['Quantitative Analyst Intern','Software Engineer Intern'],
-        'flowtraders': ['Trading Intern','Quant / Dev Intern'],
-        'mako': ['Quantitative Research Intern','Software Engineer Intern'],
-        'dv': ['Software Developer Intern (Equities)','Quantitative Analyst Intern'],
-        'squarepoint': ['Intern Quant Researcher','Intern Quant Developer'],
-        'worldquant': ['Research Consultant (BRAIN, remote)','Quantitative Analyst Intern (HK)'],
-        'jefferies-macquarie': ['Markets / Quant Summer Intern (Jefferies & Macquarie)','IBD Summer Intern'],
-        'ubiquant': ['\u91cf\u5316\u7814\u7a76\u5b9e\u4e60\u751f','\u91cf\u5316\u5f00\u53d1\u5b9e\u4e60\u751f'],
+        'jefferies-macquarie': ['Markets / Quant Summer Intern (Jefferies)','Markets / Quant Summer Intern (Macquarie)'],
+        'jane-street': ['One application covers: QR/Trading Intern','Software Engineer Intern','Strategy & Product Intern (HK office)'],
+        'millennium': ['Quantitative Researcher Intern (this application)','Quantitative Developer Intern (separate posting, campus portal)'],
+        'point72-academy': ['Academy Investment Analyst (this application)','Cubist / Systematic Quant Researcher (US-based)'],
+        'citadel': ['Quantitative Trader Intern (Asia Pacific)','Quantitative Researcher Intern','Software Engineer Intern \u2014 one active application per cycle'],
+        'optiver': ['Quantitative Intern (APAC: Sydney/Taipei)','Trading Intern','Software Engineering Intern'],
+        'sig-qst': ['Quantitative Systematic Trading Intern \u2014 Master\u2019s (this application)','Quantitative Research Intern (separate row)'],
+        'sig-qr': ['Quantitative Research Intern (this application)','Quantitative Systematic Trading Intern \u2014 Master\u2019s (separate row)'],
+        'imc-qr': ['Quantitative Researcher Intern (this application \u2014 IMC strongly encourages ONE application per cycle)','Quantitative Trader Intern','Software Engineer Intern'],
+        'deshaw': ['Quantitative Analyst Intern (best fit)','Software Developer Intern'],
+        'twosigma': ['Quantitative Research Intern (filter: Hong Kong + Internship)','Quantitative Developer Intern'],
+        'aqr': ['Research Summer Analyst (2027 programs US-based; verify APAC)','Portfolio Implementation Summer Analyst'],
+        'drw': ['Quantitative Analyst Intern (Asia)','Software Engineer Intern'],
+        'flowtraders': ['Trading Intern (HK)','Quant / Dev Intern'],
+        'mako': ['Quantitative Research Intern (HK)','Software Engineer Intern'],
+        'dv': ['Software Developer Intern \u2014 DV Equities (this application)','Quantitative Analyst Intern'],
+        'squarepoint': ['Intern Quant Researcher \u2014 HK listed at Internship level','Intern Quant Developer'],
+        'worldquant': ['Research Consultant via BRAIN (remote, merit-based, open now)','Quantitative Analyst Intern (HK, seasonal)'],
+        'ubiquant': ['\u91cf\u5316\u7814\u7a76\u5b9e\u4e60\u751f\uff08\u9999\u6e2f\uff09','\u91cf\u5316\u5f00\u53d1\u5b9e\u4e60\u751f'],
         'highflyer': ['\u91cf\u5316\u7814\u7a76\u5b9e\u4e60\u751f','\u6df1\u5ea6\u5b66\u4e60\u5b9e\u4e60\u751f'],
-        'minghong': ['\u91cf\u5316\u7814\u7a76\u5b9e\u4e60\u751f','\u91cf\u5316\u5f00\u53d1\u5b9e\u4e60\u751f'],
-        'dymon': ['Quantitative Researcher (return offer)','Quantitative Developer']
+        'minghong': ['\u91cf\u5316\u7814\u7a76\u5b9e\u4e60\u751f\uff08\u9999\u6e2f/\u4e0a\u6d77\uff09','\u91cf\u5316\u5f00\u53d1\u5b9e\u4e60\u751f'],
+        'dymon': ['Quantitative Researcher \u2014 return offer (contact former team)','Quantitative Developer'],
+        'blackrock': ['2027 Summer Internship Program (closed 2026-09-20; kept for record)'],
+        'fidelity': ['Investment Directing Summer Intern (best fit)','Equity Research Summer Intern'],
+        'pimco': ['APAC Summer Internship \u2014 Investments','Portfolio Associate Intern'],
+        'schroders': ['Investment Summer Internship','Data & Quant Summer Internship'],
+        'ares': ['Summer Internship \u2014 Credit / PE tracks']
       };
-      const portalIds = ['deshaw','citadel','optiver','twosigma','drw','flowtraders','mako','dv','squarepoint','worldquant','aqr','jefferies-macquarie','ubiquant','highflyer','minghong','dymon','nomura','fidelity','pimco','schroders','ares','hsbc'];
+      const portalIds = ['bofa-markets','deshaw','citadel','optiver','twosigma','drw','flowtraders','mako','dv','aqr','jefferies-macquarie','ubiquant','highflyer','minghong','dymon','nomura','fidelity','pimco','schroders','ares','hsbc'];
       const applications = [
-        {id:'jpm-ibd',deadline:'2026-09-30',closed:false,est:false,company:'J.P. Morgan',role:'CIB Global Investment Banking Analyst Program \u2014 Summer Analyst 2027, HK (9 wks; JD-verified)',sector:'Bank (sell-side)',match:'medium',url:'https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210749752',cv:'cv/Xu_Jingxiang_JPMorgan_IBD_CV.pdf',cl:N},
-        {id:'jpm-mqr',deadline:'2026-11-29',closed:false,est:false,company:'J.P. Morgan',role:'Markets Quantitative Trading & Research Analyst Program \u2014 Off-Cycle Internship 2027, HK (most quant-relevant JPM HK role)',sector:'Bank (sell-side)',match:'high',url:'https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210784371',cv:'cv/Xu_Jingxiang_JPMorgan_QR_CV.pdf',cl:N},
-        {id:'jpm-markets',deadline:'2026-09-30',closed:false,est:false,company:'J.P. Morgan',role:'CIB Markets Summer Analyst Program 2027, HK (S&T)',sector:'Bank (sell-side)',match:'high',url:'https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210747060',cv:'cv/Xu_Jingxiang_JPMorgan_QR_CV.pdf',cl:N},
-        {id:'jpm-markets-research',deadline:'2026-09-30',closed:false,est:false,company:'J.P. Morgan',role:'CIB Markets Summer Analyst Program \u2014 Research 2027, HK',sector:'Bank (sell-side)',match:'medium',url:'https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210747391',cv:'cv/Xu_Jingxiang_JPMorgan_QR_CV.pdf',cl:N},
-        {id:'jpm-am',deadline:'2026-09-30',closed:false,est:false,company:'J.P. Morgan',role:'Asset Management Program \u2014 Summer Internship 2027, HK (9 weeks)',sector:'Asset manager',match:'medium',url:'https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210743031',cv:'cv/Xu_Jingxiang_JPMorgan_AM_CV.pdf',cl:N},
-        {id:'blackrock',deadline:'2026-09-20',closed:true,est:false,company:'BlackRock',role:'2027 Summer Internship Program, APAC (HK, 8 weeks, Jun 14\u2013Aug 6)',sector:'Asset manager',match:'medium',url:'https://careers.blackrock.com/job/hong-kong-sar/2027-summer-internship-program-apac/45831/90599500992',cv:'cv/Xu_Jingxiang_BlackRock_CV.pdf',cl:'cover-letters/Xu_Jingxiang_BlackRock_Cover_Letter.pdf'},
-        {id:'jane-street',deadline:'2026-10-01',closed:false,est:true,company:'Jane Street',role:'Trading & Research Intern, HK (rolling; Dec 2026\u2013Feb 2027 HK cycle too)',sector:'Prop trading',match:'high',url:'https://www.janestreet.com/join-jane-street/internships',cv:'cv/Xu_Jingxiang_Jane_Street_CV.pdf',cl:N},
-        {id:'point72-academy',deadline:'2026-10-15',closed:false,est:true,company:'Point72',role:'Academy Investment Analyst Summer Internship 2027, HK (rolling)',sector:'Hedge fund',match:'high',url:'https://careers.point72.com/CSJobDetail?jobName=2027-point72-academy-investment-analyst-summer-internship-program-hong-kong&jobCode=CPA-0014708&location=Hong%20Kong&locale=English&retURL=/CSCareerSearch',cv:'cv/Xu_Jingxiang_Point72_CV.pdf',cl:'cover-letters/Xu_Jingxiang_Point72_Cover_Letter.pdf'},
-        {id:'bofa-gqs',deadline:'2026-09-30',closed:false,est:false,company:'Bank of America',role:'Global Quantitative Strategies Summer Associate 2027, HK (penultimate Master\u2019s/PhD; apply portal; note: max 2 APAC programs per season)',sector:'Bank (sell-side)',match:'medium',url:'https://bankcampuscareers.tal.net/vx/mobile-0/brand-4/candidate/so/pm/1/pl/1/opp/14359-Global-Quantitative-Strategies-Summer-Associate-2027-Hong-Kong/en-GB',cv:'cv/Xu_Jingxiang_Bank_of_America_GQS_CV.pdf',cl:'cover-letters/Xu_Jingxiang_Bank_of_America_GQS_Cover_Letter.pdf'},
-        {id:'millennium',deadline:'2026-10-31',closed:false,est:true,company:'Millennium (MLP)',role:'2027 Quantitative Researcher Intern, HK (11 wks; GPA 3.5+)',sector:'Hedge fund',match:'high',url:'https://campusjobs.mlp.com/careers/job/755957778835-2027-quantitative-researcher-intern-hong-kong-hong-kong-hong-kong?domain=mlp.com',cv:'cv/Xu_Jingxiang_Millennium_MLP_CV.pdf',cl:N},
-        {id:'citadel',deadline:'2026-10-31',closed:false,est:true,company:'Citadel Securities',role:'Quantitative Trader / Research Intern, Summer 2027 \u2014 search \u201cInternship\u201d + Asia Pacific on open positions',sector:'Prop trading',match:'high',url:'https://www.citadelsecurities.com/careers/open-positions/',cv:'cv/Xu_Jingxiang_Citadel_Securities_CV.pdf',cl:N},
+        {id:'jpm-markets',deadline:'2026-09-30',closed:false,est:false,company:'J.P. Morgan',role:'CIB Markets Summer Analyst Program 2027, HK (S&T; grad Sep 2027\u2013Jul 2028 \u2713; Mandarin desks \u2713)',sector:'Bank (sell-side)',match:'high',url:'https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210747060',cv:'cv/Xu_Jingxiang_JPMorgan_Markets_CV.pdf',cl:N},
+        {id:'jpm-markets-research',deadline:'2026-09-30',closed:false,est:false,company:'J.P. Morgan',role:'CIB Markets Summer Analyst Program \u2014 Research 2027, HK (grad Sep 2027\u2013Jul 2028 \u2713)',sector:'Bank (sell-side)',match:'medium',url:'https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210747391',cv:'cv/Xu_Jingxiang_JPMorgan_MarketsResearch_CV.pdf',cl:N},
+        {id:'bofa-gqs',deadline:'2026-09-30',closed:false,est:false,company:'Bank of America',role:'Global Quantitative Strategies Summer Associate 2027, HK (penultimate Master\u2019s/PhD; <b class="warn">APAC cap 2: this is slot 1</b>)',sector:'Bank (sell-side)',match:'high',url:'https://bankcampuscareers.tal.net/vx/mobile-0/brand-4/candidate/so/pm/1/pl/1/opp/14359-Global-Quantitative-Strategies-Summer-Associate-2027-Hong-Kong/en-GB',cv:'cv/Xu_Jingxiang_Bank_of_America_GQS_CV.pdf',cl:'cover-letters/Xu_Jingxiang_Bank_of_America_GQS_Cover_Letter.pdf'},
+        {id:'bofa-markets',deadline:'2026-09-30',closed:false,est:true,company:'Bank of America',role:'Global Markets S&T Rotational Summer Analyst 2027, HK (<b class="warn">APAC cap 2: this is slot 2</b> \u2014 search program name on portal)',sector:'Bank (sell-side)',match:'high',url:'https://careers.bankofamerica.com/en-us/students/search-jobs?searchKeyword=Global%20Markets%20Summer%20Analyst%20Hong%20Kong',cv:'cv/Xu_Jingxiang_Bank_of_America_Markets_CV.pdf',cl:N},
+        {id:'gs-apac',deadline:'2026-10-04',closed:false,est:false,company:'Goldman Sachs',role:'2027 Summer Analyst \u2014 one application, rank Strats (FICC/Equities Quant) + Securities first, HK/APAC (closes Oct 4)',sector:'Bank (sell-side)',match:'medium',url:'https://www.goldmansachs.com/careers/students/programs-and-internships/asia-pacific/summer-analyst',cv:'cv/Xu_Jingxiang_Goldman_Sachs_Strats_CV.pdf',cl:N},
+        {id:'db-summer',deadline:'2026-10-11',closed:false,est:false,company:'Deutsche Bank',role:'2027 Summer Internship Programme (IB & Capital Markets, incl. FIC Quant), HK \u2014 window Sep 7\u2013Oct 11',sector:'Bank (sell-side)',match:'medium',url:'https://careers.db.com/students-graduates/internship-programme/',cv:'cv/Xu_Jingxiang_Deutsche_Bank_CV.pdf',cl:'cover-letters/Xu_Jingxiang_Deutsche_Bank_Cover_Letter.pdf'},
+        {id:'jane-street',deadline:'2026-10-01',closed:false,est:true,company:'Jane Street',role:'QR / Trading Intern, HK \u2014 one application covers all HK roles (rolling; Dec 2026\u2013Feb 2027 HK cycle too)',sector:'Prop trading',match:'high',url:'https://www.janestreet.com/join-jane-street/internships',cv:'cv/Xu_Jingxiang_Jane_Street_CV.pdf',cl:N},
+        {id:'ms-ied-quant',deadline:'2026-10-31',closed:false,est:true,company:'Morgan Stanley',role:'2027 IED Quantitative Finance Summer Analyst/Associate, HK (JD on LinkedIn; apply via morganstanley.com)',sector:'Bank (sell-side)',match:'medium',url:'https://hk.linkedin.com/jobs/view/2027-institutional-equity-division-quantitative-finance-summer-analyst-associate-program-hong-kong-at-morgan-stanley-4436089249',cv:'cv/Xu_Jingxiang_Morgan_Stanley_CV.pdf',cl:N},
+        {id:'citi-ib',deadline:'2026-10-31',closed:false,est:true,company:'Citi',role:'Investment Banking Summer Analyst, HK APAC 2027 (10 wks; Markets & QR posted separately)',sector:'Bank (sell-side)',match:'medium',url:'https://jobs.citi.com/job/hong-kong/banking-investment-banking-summer-analyst-hong-kong-apac-2027/287/98836110080',cv:'cv/Xu_Jingxiang_Citi_CV.pdf',cl:N},
+        {id:'wellsfargo',deadline:'2026-10-31',closed:false,est:true,company:'Wells Fargo',role:'2027 APAC Banking Summer Analyst, HK',sector:'Bank (sell-side)',match:'medium',url:'https://www.wellsfargojobs.com/en/jobs/r-571608/2027-apac-banking-summer-analyst-hong-kong',cv:'cv/Xu_Jingxiang_Wells_Fargo_CV.pdf',cl:'cover-letters/Xu_Jingxiang_Wells_Fargo_Cover_Letter.pdf'},
+        {id:'jpm-mqr',deadline:'2026-11-29',closed:false,est:false,company:'J.P. Morgan',role:'Markets Quantitative Trading & Research Analyst Program \u2014 Off-Cycle 2027, HK (<b class="warn">JD: grad &ldquo;beyond Dec 2027&rdquo; \u2014 you are Dec 2027, borderline; rolling, apply early + confirm with recruiter</b>)',sector:'Bank (sell-side)',match:'high',url:'https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210784371',cv:'cv/Xu_Jingxiang_JPMorgan_MarketsQR_CV.pdf',cl:N},
+        {id:'hsbc',deadline:'2026-10-31',closed:false,est:true,company:'HSBC',role:'2027 HK CIB Summer Internship \u2014 Global Markets Sales & Trading track (10 wks from Jun; est. close end-Oct)',sector:'Bank (sell-side)',match:'medium',url:'https://www.hsbc.com/careers/students-and-graduates/internships',cv:'cv/Xu_Jingxiang_HSBC_CV.pdf',cl:'cover-letters/Xu_Jingxiang_HSBC_Cover_Letter.pdf'},
+        {id:'millennium',deadline:'2026-10-31',closed:false,est:true,company:'Millennium (MLP)',role:'2027 Quantitative Researcher Intern, HK (11 wks; grad Dec 2027\u2013Jul 2028, GPA 3.5+ \u2713)',sector:'Hedge fund',match:'high',url:'https://campusjobs.mlp.com/careers/job/755957778835-2027-quantitative-researcher-intern-hong-kong-hong-kong-hong-kong?domain=mlp.com',cv:'cv/Xu_Jingxiang_Millennium_MLP_CV.pdf',cl:N},
+        {id:'citadel',deadline:'2026-10-31',closed:false,est:true,company:'Citadel Securities',role:'Quantitative Trader / Research Intern, Summer 2027 \u2014 filter Internship + Asia Pacific',sector:'Prop trading',match:'high',url:'https://www.citadelsecurities.com/careers/open-positions/',cv:'cv/Xu_Jingxiang_Citadel_Securities_CV.pdf',cl:N},
         {id:'optiver',deadline:'2026-10-31',closed:false,est:true,company:'Optiver',role:'Summer 2027 Quantitative Intern, Asia-Pacific',sector:'Prop trading',match:'high',url:'https://www.optiver.com/join-us/students/internships',cv:'cv/Xu_Jingxiang_Optiver_CV.pdf',cl:N},
         {id:'sig-qst',deadline:'2026-10-31',closed:false,est:true,company:'SIG (Susquehanna)',role:'Quantitative Systematic Trading Internship \u2014 Master\u2019s, Summer 2027, HK',sector:'Prop trading',match:'high',url:'https://careers.sig.com/jobs/11122?lang=en-us',cv:'cv/Xu_Jingxiang_SIG_Susquehanna_CV.pdf',cl:N},
-        {id:'imc-qr',deadline:'2026-10-31',closed:false,est:true,company:'IMC Trading',role:'Quantitative Research Intern 2027, HK',sector:'Prop trading',match:'high',url:'https://www.imc.com/us/careers/jobs/4941208101',cv:'cv/Xu_Jingxiang_IMC_QR_CV.pdf',cl:N},
-        {id:'imc-swe',deadline:'2026-10-31',closed:false,est:true,company:'IMC Trading',role:'Software Engineer Intern 2027 (Strategy), HK',sector:'Prop trading',match:'high',url:'https://www.imc.com/us/careers/jobs/4941206101',cv:'cv/Xu_Jingxiang_IMC_SWE_CV.pdf',cl:N},
+        {id:'sig-qr',deadline:'2026-10-31',closed:false,est:true,company:'SIG (Susquehanna)',role:'Quantitative Research Internship \u2014 PhD/advanced, Summer 2027, HK (apply alongside QST)',sector:'Prop trading',match:'high',url:'https://careers.sig.com/jobs/11083?lang=en-us',cv:'cv/Xu_Jingxiang_SIG_Susquehanna_CV.pdf',cl:N},
+        {id:'imc-qr',deadline:'2026-10-31',closed:false,est:true,company:'IMC Trading',role:'Quantitative Research Intern 2027, HK (IMC encourages <b class="warn">one application per cycle</b> \u2014 this is it)',sector:'Prop trading',match:'high',url:'https://www.imc.com/us/careers/jobs/4941208101',cv:'cv/Xu_Jingxiang_IMC_QR_CV.pdf',cl:N},
         {id:'deshaw',deadline:'2026-10-31',closed:false,est:true,company:'D. E. Shaw',role:'Quantitative Analyst Intern, Summer 2027, HK',sector:'Hedge fund',match:'high',url:'https://www.deshaw.com/careers',cv:'cv/Xu_Jingxiang_DE_Shaw_CV.pdf',cl:N},
-        {id:'gs-apac',deadline:'2026-10-04',closed:false,est:false,company:'Goldman Sachs',role:'2027 Summer Analyst \u2014 select FICC/Equities Quantitative Strats division, HK/APAC (portal closes Oct 4)',sector:'Bank (sell-side)',match:'medium',url:'https://www.goldmansachs.com/careers/students/programs-and-internships/asia-pacific/summer-analyst',cv:'cv/Xu_Jingxiang_Goldman_Sachs_Strats_CV.pdf',cl:N},
-        {id:'ms-ied-quant',deadline:'2026-10-31',closed:false,est:true,company:'Morgan Stanley',role:'2027 IED Quantitative Finance Summer Analyst/Associate, HK (JD on LinkedIn; apply via morganstanley.com)',sector:'Bank (sell-side)',match:'medium',url:'https://hk.linkedin.com/jobs/view/2027-institutional-equity-division-quantitative-finance-summer-analyst-associate-program-hong-kong-at-morgan-stanley-4436089249',cv:'cv/Xu_Jingxiang_Morgan_Stanley_CV.pdf',cl:N},
-        {id:'citi-ib',deadline:'2026-10-31',closed:false,est:true,company:'Citi',role:'Investment Banking Summer Analyst, HK APAC 2027',sector:'Bank (sell-side)',match:'medium',url:'https://jobs.citi.com/job/hong-kong/banking-investment-banking-summer-analyst-hong-kong-apac-2027/287/98836110080',cv:'cv/Xu_Jingxiang_Citi_CV.pdf',cl:N},
-        {id:'wellsfargo',deadline:'2026-10-31',closed:false,est:true,company:'Wells Fargo',role:'2027 APAC Banking Summer Analyst, HK',sector:'Bank (sell-side)',match:'medium',url:'https://www.wellsfargojobs.com/en/jobs/r-571608/2027-apac-banking-summer-analyst-hong-kong',cv:'cv/Xu_Jingxiang_Wells_Fargo_CV.pdf',cl:'cover-letters/Xu_Jingxiang_Wells_Fargo_Cover_Letter.pdf'},
-        {id:'twosigma',deadline:'2026-11-15',closed:false,est:true,company:'Two Sigma',role:'Quantitative Research Intern 2027 \u2014 filter Hong Kong + Internship on careers portal',sector:'Hedge fund',match:'high',url:'https://careers.twosigma.com/',cv:'cv/Xu_Jingxiang_Two_Sigma_CV.pdf',cl:N},
-        {id:'hsbc',deadline:'2026-10-31',closed:false,est:true,company:'HSBC',role:'2027 HK Corporate & Institutional Banking Summer Internship \u2014 Global Markets Sales & Trading / Research tracks (10 wks from Jun; est. close end-Oct)',sector:'Bank (sell-side)',match:'medium',url:'https://www.hsbc.com/careers/students-and-graduates/internships',cv:'cv/Xu_Jingxiang_HSBC_CV.pdf',cl:'cover-letters/Xu_Jingxiang_HSBC_Cover_Letter.pdf'},
-        {id:'pimco',deadline:'2026-11-15',closed:false,est:true,company:'PIMCO',role:'APAC Summer Internship 2027, HK',sector:'Asset manager',match:'medium',url:'https://www.pimco.com/en/careers',cv:'cv/Xu_Jingxiang_PIMCO_CV.pdf',cl:'cover-letters/Xu_Jingxiang_PIMCO_Cover_Letter.pdf'},
+        {id:'point72-academy',deadline:'2026-10-15',closed:false,est:true,company:'Point72',role:'Academy Investment Analyst Summer Internship 2027, HK (rolling)',sector:'Hedge fund',match:'high',url:'https://careers.point72.com/CSJobDetail?jobName=2027-point72-academy-investment-analyst-summer-internship-program-hong-kong&jobCode=CPA-0014708&location=Hong%20Kong&locale=English&retURL=/CSCareerSearch',cv:'cv/Xu_Jingxiang_Point72_CV.pdf',cl:'cover-letters/Xu_Jingxiang_Point72_Cover_Letter.pdf'},
+        {id:'twosigma',deadline:'2026-11-15',closed:false,est:true,company:'Two Sigma',role:'Quantitative Research Intern 2027 \u2014 filter Hong Kong + Internship',sector:'Hedge fund',match:'high',url:'https://careers.twosigma.com/',cv:'cv/Xu_Jingxiang_Two_Sigma_CV.pdf',cl:N},
+        {id:'aqr',deadline:'2026-11-15',closed:false,est:true,company:'AQR',role:'2027 Summer Analyst \u2014 Research track (US-based; verify APAC availability)',sector:'Hedge fund',match:'high',url:'https://www.aqr.com/Careers',cv:'cv/Xu_Jingxiang_AQR_CV.pdf',cl:N},
+        {id:'pimco',deadline:'2026-11-15',closed:false,est:true,company:'PIMCO',role:'APAC Summer Internship 2027 \u2014 Investments, HK',sector:'Asset manager',match:'medium',url:'https://www.pimco.com/en/careers',cv:'cv/Xu_Jingxiang_PIMCO_CV.pdf',cl:'cover-letters/Xu_Jingxiang_PIMCO_Cover_Letter.pdf'},
         {id:'schroders',deadline:'2026-11-15',closed:false,est:true,company:'Schroders',role:'Summer Internship 2027 (Investment / Quant), HK',sector:'Asset manager',match:'medium',url:'https://www.schroders.com/en/hk/individual/careers/',cv:'cv/Xu_Jingxiang_Schroders_CV.pdf',cl:'cover-letters/Xu_Jingxiang_Schroders_Cover_Letter.pdf'},
-        {id:'aqr',deadline:'2026-11-15',closed:false,est:true,company:'AQR',role:'2027 Summer Analyst \u2014 Research/Trading tracks (US-based; verify APAC availability)',sector:'Hedge fund',match:'high',url:'https://www.aqr.com/Careers',cv:'cv/Xu_Jingxiang_AQR_CV.pdf',cl:N},
-        {id:'barclays-qa',deadline:'2026-11-30',closed:false,est:true,company:'Barclays',role:'Quantitative Analytics Associate Off-Cycle Internship 2027, HK',sector:'Bank (sell-side)',match:'medium',url:'https://search.jobs.barclays/job/hong-kong/quantitative-analytics-associate-off-cycle-internship-2027-hong-kong/13015/97173677168',cv:'cv/Xu_Jingxiang_Barclays_QA_CV.pdf',cl:'cover-letters/Xu_Jingxiang_Barclays_QA_Cover_Letter.pdf'},
-        {id:'barclays-et',deadline:'2026-11-30',closed:false,est:true,company:'Barclays',role:'Electronic Trading Associate Summer Internship 2027, HK',sector:'Bank (sell-side)',match:'medium',url:'https://search.jobs.barclays/job/hong-kong/electronic-trading-associate-summer-internship-programme-2027-hong-kong/13015/97173677472',cv:'cv/Xu_Jingxiang_Barclays_ET_CV.pdf',cl:'cover-letters/Xu_Jingxiang_Barclays_ET_Cover_Letter.pdf'},
-        {id:'ubs-quant',deadline:'2026-11-30',closed:false,est:true,company:'UBS',role:'Investment Bank Quants Off-Cycle Internship, HK',sector:'Bank (sell-side)',match:'medium',url:'https://jobs.ubs.com/TGnewUI/Search/home/HomeWithPreLoad?partnerid=25008&siteid=5131&PageType=searchResults&SearchType=linkquery&LinkID=15700',cv:'cv/Xu_Jingxiang_UBS_Quants_CV.pdf',cl:N},
-        {id:'db-summer',deadline:'2026-10-11',closed:false,est:false,company:'Deutsche Bank',role:'2027 Summer Internship Programme (IB & Capital Markets, incl. FIC Quant), HK \u2014 window Sep 7\u2013Oct 11',sector:'Bank (sell-side)',match:'medium',url:'https://careers.db.com/students-graduates/internship-programme/',cv:'cv/Xu_Jingxiang_Deutsche_Bank_CV.pdf',cl:'cover-letters/Xu_Jingxiang_Deutsche_Bank_Cover_Letter.pdf'},
+        {id:'barclays-qa',deadline:'2026-11-30',closed:false,est:true,company:'Barclays',role:'Quantitative Analytics Associate Off-Cycle Internship 2027, HK (6 months, Jun\u2013Dec)',sector:'Bank (sell-side)',match:'medium',url:'https://search.jobs.barclays/job/hong-kong/quantitative-analytics-associate-off-cycle-internship-2027-hong-kong/13015/97173677168',cv:'cv/Xu_Jingxiang_Barclays_QA_CV.pdf',cl:'cover-letters/Xu_Jingxiang_Barclays_QA_Cover_Letter.pdf'},
+        {id:'barclays-et',deadline:'2026-11-30',closed:false,est:true,company:'Barclays',role:'Electronic Trading Associate Summer Internship 2027, HK (grad Dec 2027\u2013Jun 2028 \u2713, GPA 3.2+ \u2713)',sector:'Bank (sell-side)',match:'medium',url:'https://search.jobs.barclays/job/hong-kong/electronic-trading-associate-summer-internship-programme-2027-hong-kong/13015/97173677472',cv:'cv/Xu_Jingxiang_Barclays_ET_CV.pdf',cl:'cover-letters/Xu_Jingxiang_Barclays_ET_Cover_Letter.pdf'},
+        {id:'ubs-quant',deadline:'2026-11-30',closed:false,est:true,company:'UBS',role:'Investment Bank Quants Off-Cycle Internship, HK (UBS does not ask for cover letters)',sector:'Bank (sell-side)',match:'medium',url:'https://jobs.ubs.com/TGnewUI/Search/home/HomeWithPreLoad?partnerid=25008&siteid=5131&PageType=searchResults&SearchType=linkquery&LinkID=15700',cv:'cv/Xu_Jingxiang_UBS_Quants_CV.pdf',cl:N},
         {id:'nomura',deadline:'2026-11-30',closed:false,est:true,company:'Nomura',role:'Summer Analyst 2027 \u2014 Markets / Quant, HK',sector:'Bank (sell-side)',match:'medium',url:'https://www.nomura.com/careers/',cv:'cv/Xu_Jingxiang_Nomura_CV.pdf',cl:'cover-letters/Xu_Jingxiang_Nomura_Cover_Letter.pdf'},
-        {id:'fidelity',deadline:'2026-11-30',closed:false,est:true,company:'Fidelity International',role:'Summer Internship 2027 (Investment Directing), HK',sector:'Asset manager',match:'medium',url:'https://careers.fidelityinternational.com/early-careers-overview/interns-and-insights/internships',cv:'cv/Xu_Jingxiang_Fidelity_International_CV.pdf',cl:'cover-letters/Xu_Jingxiang_Fidelity_International_Cover_Letter.pdf'},
+        {id:'fidelity',deadline:'2026-11-30',closed:false,est:true,company:'Fidelity International',role:'Summer Internship 2027 \u2014 Investment Directing, HK',sector:'Asset manager',match:'medium',url:'https://careers.fidelityinternational.com/early-careers-overview/interns-and-insights/internships',cv:'cv/Xu_Jingxiang_Fidelity_International_CV.pdf',cl:'cover-letters/Xu_Jingxiang_Fidelity_International_Cover_Letter.pdf'},
         {id:'ares',deadline:'2026-11-30',closed:false,est:true,company:'Ares Management',role:'Summer 2027 Internship Program (10 wks, APAC)',sector:'Asset manager',match:'medium',url:'https://www.aresmgmt.com/careers',cv:'cv/Xu_Jingxiang_Ares_CV.pdf',cl:'cover-letters/Xu_Jingxiang_Ares_Cover_Letter.pdf'},
-        {id:'drw',deadline:'2026-11-30',closed:false,est:true,company:'DRW',role:'Quant / Technology Internship, Summer 2027, Asia',sector:'Prop trading',match:'high',url:'https://www.drw.com/careers/',cv:'cv/Xu_Jingxiang_DRW_CV.pdf',cl:N},
+        {id:'drw',deadline:'2026-11-30',closed:false,est:true,company:'DRW',role:'Quantitative Analyst Intern, Summer 2027, Asia',sector:'Prop trading',match:'high',url:'https://www.drw.com/careers/',cv:'cv/Xu_Jingxiang_DRW_CV.pdf',cl:N},
         {id:'flowtraders',deadline:'2026-11-30',closed:false,est:true,company:'Flow Traders',role:'Trading / Quant Internship, HK',sector:'Prop trading',match:'high',url:'https://www.flowtraders.com/careers',cv:'cv/Xu_Jingxiang_Flow_Traders_CV.pdf',cl:N},
-        {id:'mako',deadline:'2026-11-30',closed:false,est:true,company:'Mako Trading',role:'Quant / SWE Internship, HK',sector:'Prop trading',match:'high',url:'https://www.mako.com/careers/',cv:'cv/Xu_Jingxiang_Mako_CV.pdf',cl:N},
-        {id:'dv',deadline:'2026-11-30',closed:false,est:true,company:'DV Trading',role:'2027 Software Developer Intern (DV Equities), HK',sector:'Prop trading',match:'high',url:'https://www.efinancialcareers.hk/',cv:'cv/Xu_Jingxiang_DV_Trading_CV.pdf',cl:N},
-        {id:'squarepoint',deadline:'2026-11-30',closed:false,est:true,company:'Squarepoint',role:'Intern Quant Researcher \u2014 HK listed on open opportunities (Internship level)',sector:'Hedge fund',match:'high',url:'https://www.squarepoint-capital.com/open-opportunities?lvl=Internship',cv:'cv/Xu_Jingxiang_Squarepoint_CV.pdf',cl:N},
-        {id:'worldquant',deadline:'2026-11-30',closed:false,est:true,company:'WorldQuant',role:'Research Consultant via BRAIN platform (remote, merit-based) + HK internship openings',sector:'Hedge fund',match:'high',url:'https://brain.worldquant.com/',cv:'cv/Xu_Jingxiang_WorldQuant_CV.pdf',cl:N},
+        {id:'mako',deadline:'2026-11-30',closed:false,est:true,company:'Mako Trading',role:'Quantitative Research Intern, HK',sector:'Prop trading',match:'high',url:'https://www.mako.com/careers/',cv:'cv/Xu_Jingxiang_Mako_CV.pdf',cl:N},
+        {id:'dv',deadline:'2026-11-30',closed:false,est:true,company:'DV Trading',role:'2027 Software Developer Intern \u2014 DV Equities, HK',sector:'Prop trading',match:'high',url:'https://www.efinancialcareers.hk/',cv:'cv/Xu_Jingxiang_DV_Trading_CV.pdf',cl:N},
+        {id:'squarepoint',deadline:'2026-11-30',closed:false,est:true,company:'Squarepoint',role:'Intern Quant Researcher \u2014 HK (Internship-level listings)',sector:'Hedge fund',match:'high',url:'https://www.squarepoint-capital.com/open-opportunities?lvl=Internship',cv:'cv/Xu_Jingxiang_Squarepoint_CV.pdf',cl:N},
+        {id:'worldquant',deadline:'2026-11-30',closed:false,est:true,company:'WorldQuant',role:'Research Consultant via BRAIN platform (open now, remote) + HK internship openings',sector:'Hedge fund',match:'high',url:'https://brain.worldquant.com/',cv:'cv/Xu_Jingxiang_WorldQuant_CV.pdf',cl:N},
         {id:'jefferies-macquarie',deadline:'2026-12-15',closed:false,est:true,company:'Jefferies / Macquarie',role:'Summer Internship 2027 \u2014 Markets / Quant, HK',sector:'Bank (sell-side)',match:'medium',url:'https://www.jefferies.com/careers',cv:'cv/Xu_Jingxiang_Jefferies_Macquarie_CV.pdf',cl:N},
         {id:'ubiquant',deadline:'2026-12-31',closed:false,est:true,company:'Ubiquant (九坤投资)',role:'Quantitative Research Intern, HK office',sector:'Quant private fund',match:'high',url:'https://www.ubiquant.com/',cv:'cv/Xu_Jingxiang_Ubiquant_CV.pdf',cl:N},
         {id:'highflyer',deadline:'2026-12-31',closed:false,est:true,company:'High-Flyer (幻方量化)',role:'Quantitative Research Intern (量化研究实习生)',sector:'Quant private fund',match:'high',url:'https://www.high-flyer.cn/',cv:'cv/Xu_Jingxiang_High_Flyer_CV.pdf',cl:N},
         {id:'minghong',deadline:'2026-12-31',closed:false,est:true,company:'Minghong (明汯投资)',role:'Quantitative Research Intern, HK / Shanghai (rolling)',sector:'Quant private fund',match:'high',url:'https://www.minghong.net/',cv:'cv/Xu_Jingxiang_Minghong_CV.pdf',cl:N},
-        {id:'dymon',deadline:'2026-12-31',closed:false,est:true,company:'Dymon Asia',role:'Summer 2027 Quantitative Research (return) \u2014 contact former team',sector:'Hedge fund',match:'high',url:'https://www.dymonasia.com/',cv:'cv/Xu_Jingxiang_Dymon_Asia_CV.pdf',cl:N}
+        {id:'dymon',deadline:'2026-12-31',closed:false,est:true,company:'Dymon Asia',role:'Summer 2027 Quantitative Research (return) \u2014 contact former team',sector:'Hedge fund',match:'high',url:'https://www.dymonasia.com/',cv:'cv/Xu_Jingxiang_Dymon_Asia_CV.pdf',cl:N},
+        {id:'blackrock',deadline:'2026-09-20',closed:true,est:false,company:'BlackRock',role:'2027 Summer Internship Program, APAC (HK, 8 weeks, Jun 14\u2013Aug 6)',sector:'Asset manager',match:'medium',url:'https://careers.blackrock.com/job/hong-kong-sar/2027-summer-internship-program-apac/45831/90599500992',cv:'cv/Xu_Jingxiang_BlackRock_CV.pdf',cl:'cover-letters/Xu_Jingxiang_BlackRock_Cover_Letter.pdf'}
       ].sort((a,b) => a.deadline.localeCompare(b.deadline) || a.company.localeCompare(b.company));
 
       const statusChoices = ['Not started','Submitted','Received / under review','OA received','OA outstanding','Interview','Offer','Rejected','Closed'];
@@ -227,8 +223,8 @@
           <tr data-id="${app.id}">
             <td>${deadlineCell}</td>
             <td><span class="company">${escapeHtml(app.company)}</span></td>
-            <td class="role">${escapeHtml(app.role)}</td>
-            <td class="roles-cell">${(rolesMap[app.id] || [app.role]).map((r, i) => `<div class="${i === 0 ? 'primary' : 'alt'}">${escapeHtml(r)}</div>`).join('')}</td>
+            <td class="role">${app.role}</td>
+            <td class="roles-cell">${(rolesMap[app.id] || []).map((r, i) => `<div class="${i === 0 ? 'primary' : 'alt'}">${escapeHtml(r)}</div>`).join('')}</td>
             <td><span class="sector">${escapeHtml(app.sector)}</span></td>
             <td><span class="match match-${app.match}">${app.match === 'high' ? 'High match' : 'Medium match'}</span></td>
             <td><select class="${classFor(status)} data-status">${options}</select></td>
