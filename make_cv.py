@@ -106,7 +106,6 @@ CONFIG = [
  ("Goldman_Sachs_Strats",       "bank",    "2027 Summer Analyst \u2014 Strats, Hong Kong / APAC"),
  ("JPMorgan_MarketsQR",         "trading", "Markets Quantitative Trading & Research Analyst Program \u2014 Off-Cycle Internship 2027, Hong Kong"),
  ("JPMorgan_Markets",           "trading", "CIB Markets Summer Analyst Program 2027, Hong Kong (Sales & Trading)"),
- ("JPMorgan_MarketsResearch",   "quant",   "CIB Markets Summer Analyst Program \u2014 Research 2027, Hong Kong"),
  ("Morgan_Stanley",             "bank",    "2027 IED Quantitative Finance Summer Analyst/Associate, Hong Kong"),
  ("Citi",                       "bank",    "Investment Banking / Markets Summer Analyst 2027, Hong Kong"),
  ("Deutsche_Bank",              "bank",    "2027 Summer Internship \u2014 Markets & Quant, Hong Kong"),
