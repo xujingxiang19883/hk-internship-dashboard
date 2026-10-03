@@ -193,7 +193,7 @@ CONFIG = [
  ("DRW","trading"), ("Flow_Traders","trading"), ("Mako","trading"), ("Squarepoint","quant"),
  ("WorldQuant","quant"), ("Ubiquant","quant"), ("High_Flyer","quant"), ("Minghong","quant"),
  ("Lingjun","quant"), ("Wizard_Quant","quant"), ("Dymon_Asia","quant"),
- ("Jump_Trading","trading"), ("Wincent","trading"),
+ ("Jump_Trading","trading"), ("Tower_Research","trading"), ("HRT","trading"),
  ("Jain_Global","bank"),
  ("Bank_of_America_GQS","bank"), ("Bank_of_America_Markets","trading"),
  ("Barclays_QA","bank"), ("Barclays_ET","bank"),
