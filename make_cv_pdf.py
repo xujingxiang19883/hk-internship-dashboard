@@ -194,7 +194,6 @@ CONFIG = [
  ("WorldQuant","quant"), ("Ubiquant","quant"), ("High_Flyer","quant"), ("Minghong","quant"),
  ("Lingjun","quant"), ("Wizard_Quant","quant"), ("Dymon_Asia","quant"),
  ("Jump_Trading","trading"), ("Tower_Research","trading"), ("HRT","trading"),
- ("Jain_Global","bank"),
  ("Bank_of_America_GQS","bank"), ("Bank_of_America_Markets","trading"),
  ("Barclays_QA","bank"), ("Barclays_ET","bank"),
  ("UBS_Quants","bank"), ("Goldman_Sachs_Strats","bank"),
@@ -203,8 +202,7 @@ CONFIG = [
  ("Wells_Fargo","bank"), ("Jefferies_Macquarie","bank"),
  ("SIG_Susquehanna","trading"), ("IMC_QR","trading"),
  ("Optiver","trading"), ("Citadel_Securities","trading"), ("Point72","quant"),
- ("BlackRock","am"), ("Fidelity_International","am"), ("PIMCO","am"),
- ("Schroders","am"), ("Ares","am"),
+ ("BlackRock","am"), ("Fidelity_International","am"), ("PIMCO","am"), ("Ares","am"),
 ]
 
 PHONE_TEXT = "+852 6810 9521 / 607-882-5108"
