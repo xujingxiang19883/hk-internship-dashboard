@@ -177,8 +177,6 @@ SPECIALS = {
  "Bank_of_America_GQS": {"dymon2": "Designed an auditable, object-oriented Python pipeline (pandas/NumPy) integrating FactSet, ERD and HKEX filings, with AI/LLM-assisted screening gates and a filing-based free-float engine mapping shareholder evidence to the ten HSIL categories."},
  "JPMorgan_MarketsQR": {"oxf1": "Modeled Lightning Network channel management as a discounted MDP under stochastic payment flows, applying probability theory, dynamic programming and numerical methods to derive optimal routing and liquidity policies."},
  "Point72":       {"dymon1": "Researched Hang Seng Composite and Tech Index rebalancing rules to predict constituent inclusions and exclusions before official announcements \u2014 a repeatable, thesis-driven edge built from public filings and rulebook analysis."},
- "HSBC":          {"dymon1": "Researched Hang Seng Composite and Tech Index rebalancing rules to predict constituent inclusions and exclusions before official announcements, translating published methodologies into point-in-time eligibility, liquidity and buffer-selection logic for APAC markets."},
-
 }
 
 CONFIG = [    ("Flow_Traders","trading"), ("Squarepoint","quant"),
