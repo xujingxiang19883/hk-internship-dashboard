@@ -178,7 +178,6 @@ SPECIALS = {
  "Barclays_QA":   {"dymon3": "Achieved an 82.6% action-level hit rate (185 of 224 additions and deletions) across three rebalances in leakage-controlled, point-in-time evaluation \u2014 model outputs independently reconciled to realized index actions."},
  "Barclays_ET":   {"hku2": "Built a Python pipeline that scanned live order books, ranked opportunities by expected value, enforced position limits, submitted orders algorithmically, and tracked realized P&L and execution quality."},
  "JPMorgan_MarketsQR": {"oxf1": "Modeled Lightning Network channel management as a discounted MDP under stochastic payment flows, applying probability theory, dynamic programming and numerical methods to derive optimal routing and liquidity policies."},
- "SIG_Susquehanna": {"hku2": "Built a Python pipeline that scanned live markets, ranked opportunities by probability-weighted expected value, enforced position limits, submitted orders, and tracked realized P&L \u2014 reasoning about edge, variance and market making."},
  "Optiver":       {"hku2": "Built a Python pipeline that scanned live order books, ranked opportunities by bid-ask edge, enforced position limits, submitted quotes and orders, and tracked realized P&L and inventory risk."},
  "Point72":       {"dymon1": "Researched Hang Seng Composite and Tech Index rebalancing rules to predict constituent inclusions and exclusions before official announcements \u2014 a repeatable, thesis-driven edge built from public filings and rulebook analysis."},
  "Millennium_MLP":{"nine3": "Analyzed daily exposures to 10 Barra style factors to identify signal decay and crowding."},
@@ -188,20 +187,14 @@ SPECIALS = {
 
 }
 
-CONFIG = [
- ("Millennium_MLP","quant"), ("DE_Shaw","quant"), ("Two_Sigma","quant"), ("AQR","quant"),
- ("DRW","trading"), ("Flow_Traders","trading"), ("Squarepoint","quant"),
+CONFIG = [ ("DE_Shaw","quant"), ("Two_Sigma","quant"), ("AQR","quant"), ("Flow_Traders","trading"), ("Squarepoint","quant"),
  ("WorldQuant","quant"), ("Ubiquant","quant"), ("High_Flyer","quant"), ("Minghong","quant"),
  ("Lingjun","quant"), ("Wizard_Quant","quant"), ("Dymon_Asia","quant"),
  ("Jump_Trading","trading"), ("Tower_Research","trading"), ("HRT","trading"),
- ("Bank_of_America_GQS","bank"), ("Bank_of_America_Markets","trading"),
- ("Barclays_QA","bank"), ("Barclays_ET","bank"),
+ ("Bank_of_America_GQS","bank"), ("Bank_of_America_Markets","trading"), ("Barclays_ET","bank"),
  ("UBS_Quants","bank"), ("Goldman_Sachs_Strats","bank"),
  ("JPMorgan_MarketsQR","trading"), ("Morgan_Stanley","bank"),
- ("Citi","bank"),
- ("Wells_Fargo","bank"), ("Jefferies_Macquarie","bank"),
- ("SIG_Susquehanna","trading"), ("IMC_QR","trading"),
- ("Optiver","trading"), ("Citadel_Securities","trading"), ("Point72","quant"),
+ ("Citi","bank"), ("Jefferies_Macquarie","bank"), ("IMC_QR","trading"), ("Citadel_Securities","trading"), ("Point72","quant"),
  ("BlackRock","am"), ("Fidelity_International","am"), ("PIMCO","am"), ("Ares","am"),
 ]
 
