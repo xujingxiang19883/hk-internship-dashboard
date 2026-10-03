@@ -185,12 +185,12 @@ SPECIALS = {
  "DE_Shaw":       {"oxf2": "Implemented value iteration for discrete and exponential payment distributions with convergence and sensitivity analysis, demonstrating that bidirectional flows naturally rebalance liquidity and eliminate costly resets."},
  "Two_Sigma":     {"river3": "Designed and productionized a two-stage machine-learning retrieval pipeline (BGE embeddings with cosine similarity, then LLM-based refinement) for classification, reranking and ambiguous theme resolution."},
  "HSBC":          {"dymon1": "Researched Hang Seng Composite and Tech Index rebalancing rules to predict constituent inclusions and exclusions before official announcements, translating published methodologies into point-in-time eligibility, liquidity and buffer-selection logic for APAC markets."},
- "Deutsche_Bank": {"ne2": "Implemented a Monte Carlo method approximating ERC weights by minimizing asset risk-contribution gaps."},
+
 }
 
 CONFIG = [
  ("Millennium_MLP","quant"), ("DE_Shaw","quant"), ("Two_Sigma","quant"), ("AQR","quant"),
- ("DRW","trading"), ("Flow_Traders","trading"), ("Mako","trading"), ("Squarepoint","quant"),
+ ("DRW","trading"), ("Flow_Traders","trading"), ("Squarepoint","quant"),
  ("WorldQuant","quant"), ("Ubiquant","quant"), ("High_Flyer","quant"), ("Minghong","quant"),
  ("Lingjun","quant"), ("Wizard_Quant","quant"), ("Dymon_Asia","quant"),
  ("Jump_Trading","trading"), ("Tower_Research","trading"), ("HRT","trading"),
@@ -198,7 +198,7 @@ CONFIG = [
  ("Barclays_QA","bank"), ("Barclays_ET","bank"),
  ("UBS_Quants","bank"), ("Goldman_Sachs_Strats","bank"),
  ("JPMorgan_MarketsQR","trading"), ("Morgan_Stanley","bank"),
- ("Citi","bank"), ("Deutsche_Bank","bank"), ("HSBC","bank"), ("Nomura","bank"),
+ ("Citi","bank"),
  ("Wells_Fargo","bank"), ("Jefferies_Macquarie","bank"),
  ("SIG_Susquehanna","trading"), ("IMC_QR","trading"),
  ("Optiver","trading"), ("Citadel_Securities","trading"), ("Point72","quant"),
