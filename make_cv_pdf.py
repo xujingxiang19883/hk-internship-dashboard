@@ -175,26 +175,20 @@ V = {
 # per-company overrides keyed (block) for targeted JD alignment
 SPECIALS = {
  "Bank_of_America_GQS": {"dymon2": "Designed an auditable, object-oriented Python pipeline (pandas/NumPy) integrating FactSet, ERD and HKEX filings, with AI/LLM-assisted screening gates and a filing-based free-float engine mapping shareholder evidence to the ten HSIL categories."},
- "Barclays_QA":   {"dymon3": "Achieved an 82.6% action-level hit rate (185 of 224 additions and deletions) across three rebalances in leakage-controlled, point-in-time evaluation \u2014 model outputs independently reconciled to realized index actions."},
- "Barclays_ET":   {"hku2": "Built a Python pipeline that scanned live order books, ranked opportunities by expected value, enforced position limits, submitted orders algorithmically, and tracked realized P&L and execution quality."},
  "JPMorgan_MarketsQR": {"oxf1": "Modeled Lightning Network channel management as a discounted MDP under stochastic payment flows, applying probability theory, dynamic programming and numerical methods to derive optimal routing and liquidity policies."},
- "Optiver":       {"hku2": "Built a Python pipeline that scanned live order books, ranked opportunities by bid-ask edge, enforced position limits, submitted quotes and orders, and tracked realized P&L and inventory risk."},
  "Point72":       {"dymon1": "Researched Hang Seng Composite and Tech Index rebalancing rules to predict constituent inclusions and exclusions before official announcements \u2014 a repeatable, thesis-driven edge built from public filings and rulebook analysis."},
- "Millennium_MLP":{"nine3": "Analyzed daily exposures to 10 Barra style factors to identify signal decay and crowding."},
- "DE_Shaw":       {"oxf2": "Implemented value iteration for discrete and exponential payment distributions with convergence and sensitivity analysis, demonstrating that bidirectional flows naturally rebalance liquidity and eliminate costly resets."},
- "Two_Sigma":     {"river3": "Designed and productionized a two-stage machine-learning retrieval pipeline (BGE embeddings with cosine similarity, then LLM-based refinement) for classification, reranking and ambiguous theme resolution."},
  "HSBC":          {"dymon1": "Researched Hang Seng Composite and Tech Index rebalancing rules to predict constituent inclusions and exclusions before official announcements, translating published methodologies into point-in-time eligibility, liquidity and buffer-selection logic for APAC markets."},
 
 }
 
-CONFIG = [ ("DE_Shaw","quant"), ("Two_Sigma","quant"), ("AQR","quant"), ("Flow_Traders","trading"), ("Squarepoint","quant"),
+CONFIG = [    ("Flow_Traders","trading"), ("Squarepoint","quant"),
  ("WorldQuant","quant"), ("Ubiquant","quant"), ("High_Flyer","quant"), ("Minghong","quant"),
  ("Lingjun","quant"), ("Wizard_Quant","quant"), ("Dymon_Asia","quant"),
  ("Jump_Trading","trading"), ("Tower_Research","trading"), ("HRT","trading"),
- ("Bank_of_America_GQS","bank"), ("Bank_of_America_Markets","trading"), ("Barclays_ET","bank"), ("Goldman_Sachs_Strats","bank"),
- ("JPMorgan_MarketsQR","trading"), ("Morgan_Stanley","bank"),
- ("Citi","bank"), ("Jefferies_Macquarie","bank"), ("IMC_QR","trading"), ("Citadel_Securities","trading"), ("Point72","quant"),
- ("BlackRock","am"), ("Fidelity_International","am"), ("PIMCO","am"), ("Ares","am"),
+ ("Bank_of_America_GQS","bank"), ("Bank_of_America_Markets","trading"),  ("Goldman_Sachs_Strats","bank"),
+ ("JPMorgan_MarketsQR","trading"), 
+ ("Citi","bank"), ("Jefferies_Macquarie","bank"), ("IMC_QR","trading"),  ("Point72","quant"),
+    
 ]
 
 PHONE_TEXT = "+852 6810 9521 / 607-882-5108"
