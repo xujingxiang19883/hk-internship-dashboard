@@ -185,7 +185,7 @@ CONFIG = [    ("Flow_Traders","trading"), ("Squarepoint","quant"),
  ("Jump_Trading","trading"), ("Tower_Research","trading"), ("HRT","trading"),
  ("Bank_of_America_GQS","bank"), ("Bank_of_America_Markets","trading"),  ("Goldman_Sachs_Strats","bank"),
  ("JPMorgan_MarketsQR","trading"), 
- ("Citi","bank"), ("Jefferies_Macquarie","bank"),  ("Point72","quant"),
+ ("Citi","bank"), ("Macquarie","bank"),  ("Point72","quant"),
     
 ]
 
