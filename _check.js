@@ -1,110 +1,4 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Hong Kong summer 2027 internship application dashboard: deadlines, resume-match tiers, application links, per-company tailored CVs and cover letters." />
-    <title>HK Application Dashboard · Summer 2027</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23172a45'/%3E%3Cpath d='M17 45V19h9l6 13 6-13h9v26h-8V31l-7 14-7-14v14z' fill='%236fd3c2'/%3E%3C/svg%3E" />
-    <style>
-      :root { --navy:#12233c; --ink:#19253a; --muted:#68758a; --line:#dbe3ed; --paper:#f5f7fb; --aqua:#0d8f82; --gold:#b47712; --rose:#b53f4d; --shadow:0 12px 35px rgba(19,35,60,.08); }
-      * { box-sizing:border-box; }
-      body { margin:0; color:var(--ink); background:var(--paper); font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size:16px; line-height:1.45; }
-      .shell { max-width:1520px; margin:0 auto; padding:32px 24px 48px; }
-      .masthead { display:flex; justify-content:space-between; gap:24px; align-items:flex-end; padding:12px 4px 26px; }
-      h1 { margin:0; color:var(--navy); font-size:clamp(1.7rem,3vw,2.45rem); letter-spacing:-.04em; line-height:1.08; }
-      .eyebrow { margin:0 0 7px; color:var(--aqua); font-weight:750; font-size:.78rem; letter-spacing:.11em; text-transform:uppercase; }
-      .subtitle { max-width:860px; margin:10px 0 0; color:var(--muted); }
-      .save-note { max-width:330px; color:var(--muted); font-size:.86rem; text-align:right; }
-      .save-note strong { color:var(--aqua); }
-      .metrics { display:grid; grid-template-columns:repeat(7,minmax(115px,1fr)); gap:12px; margin-bottom:18px; }
-      .metric { min-height:92px; padding:16px; border:1px solid var(--line); border-radius:13px; background:#fff; box-shadow:var(--shadow); }
-      .metric .label { color:var(--muted); font-size:.76rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; }
-      .metric .value { display:block; margin-top:6px; color:var(--navy); font-size:1.65rem; font-weight:760; letter-spacing:-.04em; }
-      .metric.urgent .value { color:var(--rose); }
-      .panel { overflow:hidden; border:1px solid var(--line); border-radius:16px; background:#fff; box-shadow:var(--shadow); }
-      .toolbar { display:flex; justify-content:space-between; gap:16px; align-items:center; padding:18px 20px; border-bottom:1px solid var(--line); }
-      .toolbar p { margin:0; color:var(--muted); font-size:.9rem; }
-      button { border:1px solid #b8c5d5; border-radius:8px; padding:8px 11px; color:var(--navy); background:#fff; font:inherit; font-size:.85rem; font-weight:700; cursor:pointer; }
-      button:hover { border-color:var(--aqua); color:var(--aqua); }
-      .table-wrap { overflow:auto; max-height:calc(100vh - 150px); }
-      table { width:100%; min-width:1420px; border-collapse:collapse; }
-      th { padding:12px 14px; color:#506079; background:#f7f9fc; border-bottom:1px solid var(--line); text-align:left; font-size:.73rem; letter-spacing:.07em; text-transform:uppercase; white-space:nowrap; position:sticky; top:0; z-index:2; box-shadow:0 1px 0 var(--line); }
-      td { padding:13px 14px; border-bottom:1px solid #e8edf3; vertical-align:top; }
-      tbody tr:last-child td { border-bottom:0; }
-      tbody tr:hover { background:#fbfcfe; }
-      .company { color:var(--navy); font-weight:760; }
-      .role { max-width:360px; color:#344057; }
-      .date { white-space:nowrap; color:#4d5c72; font-variant-numeric:tabular-nums; }
-      .date.closed { color:var(--rose); font-weight:700; }
-      .date.est::after { content:" est."; color:#8994a6; font-size:.75rem; }
-      .link { display:inline-flex; align-items:center; gap:4px; color:#0b6d8a; font-weight:700; font-size:.88rem; text-decoration:none; white-space:nowrap; }
-      .link:hover { text-decoration:underline; }
-      .missing { color:#8994a6; font-size:.82rem; white-space:nowrap; }
-      .match { display:inline-block; border-radius:999px; padding:3px 10px; font-size:.76rem; font-weight:750; white-space:nowrap; }
-      .match-high { background:#e2f6f1; color:#08756b; border:1px solid #a9ded6; }
-      .match-medium { background:#fdf3e0; color:#8a5a00; border:1px solid #efd49c; }
-      .sector { color:#68758a; font-size:.8rem; white-space:nowrap; }
-      select { min-width:150px; border:1px solid #cbd5e1; border-radius:8px; padding:7px 26px 7px 9px; color:var(--navy); background:#fff; font:inherit; font-size:.85rem; font-weight:700; cursor:pointer; }
-      select.status-rejected { border-color:#f2b8bd; color:#9f2935; background:#fff7f7; }
-      select.status-oa { border-color:#efd49c; color:#8a5a00; background:#fffaf0; }
-      select.status-received { border-color:#a9ded6; color:#08756b; background:#f2fcfa; }
-      select.status-progress { border-color:#b9c8f1; color:#3455a0; background:#f5f7ff; }
-      .roles-cell div { white-space:nowrap; }
-      .roles-cell div + div { margin-top:3px; }
-      .roles-cell .primary { color:var(--navy); font-weight:760; }
-      .roles-cell .alt { color:#42506a; font-size:.84rem; }
-      .warn { color:var(--rose); font-weight:700; }
-      .cv-note { margin:18px 4px 0; padding:14px 18px; border:1px solid var(--line); border-radius:13px; background:#fff; box-shadow:var(--shadow); color:var(--muted); font-size:.9rem; }
-      .footer { display:flex; justify-content:space-between; gap:20px; margin:18px 4px 0; color:var(--muted); font-size:.82rem; }
-      @media (max-width:900px) { .metrics { grid-template-columns:repeat(3,1fr); } .masthead { align-items:flex-start; flex-direction:column; } .save-note { text-align:left; } }
-      @media (max-width:560px) { .shell { padding:22px 14px 32px; } .metrics { grid-template-columns:repeat(2,1fr); } .toolbar { align-items:flex-start; flex-direction:column; } .metric { min-height:80px; } }
-    </style>
-  </head>
-  <body>
-    <main class="shell">
-      <header class="masthead">
-        <div>
-          <p class="eyebrow">Hong Kong · Summer 2027 · Buy-side &amp; Sell-side</p>
-          <h1>HK internship application dashboard</h1>
-          <p class="subtitle">Each row is one selected application. Where an employer caps applications per region (BofA: max 2 APAC) or encourages a single application (IMC, Jane Street, GS one-app-multi-division), the selection respects that rule; otherwise up to the 3 best-fit roles are listed per company. Sorted by deadline.</p>
-        </div>
-        <div class="save-note" id="save-note">Edits are saved <strong>only in this browser</strong> and can be reset below.</div>
-      </header>
 
-      <section class="metrics" aria-label="Application summary">
-        <div class="metric urgent"><span class="label">Urgent (&lt;=2 wks)</span><span class="value" id="metric-urgent">0</span></div>
-        <div class="metric"><span class="label">Total</span><span class="value" id="metric-total">0</span></div>
-        <div class="metric"><span class="label">High match</span><span class="value" id="metric-high">0</span></div>
-        <div class="metric"><span class="label">Medium match</span><span class="value" id="metric-medium">0</span></div>
-        <div class="metric"><span class="label">Submitted</span><span class="value" id="metric-submitted">0</span></div>
-        <div class="metric"><span class="label">OA received</span><span class="value" id="metric-oa">0</span></div>
-        <div class="metric"><span class="label">Rejected</span><span class="value" id="metric-rejected">0</span></div>
-      </section>
-
-      <section class="panel" aria-labelledby="tracker-title">
-        <div class="toolbar">
-          <p id="tracker-title"><b>Apply</b> = exact job posting / application page; <b>Search portal</b> = employer&rsquo;s filtered careers search (HK 2027 postings appear seasonally). <span class="warn">Red notes</span> flag eligibility caveats. &ldquo;est.&rdquo; deadlines from prior cycles &mdash; verify.</p>
-          <button type="button" id="reset-statuses">Reset browser edits</button>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Deadline</th><th>Company</th><th>Role (linked JD)</th><th>Other selected / suitable roles</th><th>Sector</th><th>Match</th><th>Current status</th><th>Application / JD</th><th>CV (tailored)</th><th>Cover letter</th></tr></thead>
-            <tbody id="application-rows"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <div class="cv-note">
-        <strong>JD-verified checks &amp; CV alignment (2026-09-26):</strong>
-        <b>BofA GQS</b> (penultimate Master&rsquo;s/PhD, Math/Eng/Physics/CS, OOP, AI/ML, English+Asian language; deadline Sep 30; <b>APAC cap: 2 programs</b> &mdash; GQS + Global Markets S&amp;T = your two): CV covers all via MEng FE, Python/C++, DeepSeek/BGE ML pipelines, Mandarin ✓.
-        <b>JPM Markets SA &amp; Research</b> (grad Sep 2027&ndash;Jul 2028 ✓ Dec 2027; Mandarin desks flagged in JD ✓ native): CV states Dec 2027 graduation + availability Jun&ndash;Aug 2027.
-        <span class="warn"><b>JPM Markets QR Off-Cycle: JD says &ldquo;expected graduation beyond December 2027&rdquo; &mdash; you graduate exactly Dec 2027, borderline; apply early + email the recruiter to confirm.</span></span>
-        <b>Barclays ET</b> (postgrad, Dec 2027&ndash;Jun 2028, GPA 3.2+, Java/C++/Python ✓). <b>Millennium</b> (Dec 2027&ndash;Jul 2028, GPA 3.5+ ✓ 3.74). <b>SIG QST</b> (Master&rsquo;s, Jun 2027 start ✓). <b>IMC / Jane Street / GS</b>: single-application cultures &mdash; one row each, roles column shows what the one application covers.
-      </div>
-      <footer class="footer"><span>All applications unsubmitted as of compilation. BlackRock HK closed 2026-09-20 (kept for record).</span><span>SIG interview 10/8 - prep sheet linked in the SIG row. Links &amp; JD requirements re-verified: 2026-09-26</span></footer>
-    </main>
-    <script>
       const N = null;
       const rolesMap = {
         'jpm-mqr': ['Markets Quant Trading & Research \u2014 Off-Cycle (this application)','Markets Summer Analyst (S&T) \u2014 applied 09/26'],
@@ -150,7 +44,7 @@
       };
       const portalIds = ['wincent','jain-global','lingjun','wizard','bofa-markets','deshaw','citadel','optiver','twosigma','drw','flowtraders','mako','dv','aqr','jefferies-macquarie','ubiquant','highflyer','minghong','dymon','nomura','fidelity','pimco','schroders','ares','hsbc'];
       const applications = [
-        {id:'jpm-markets',deadline:'2026-09-30',closed:false,est:false,company:'J.P. Morgan',role:'CIB Markets Summer Analyst Program 2027, HK (S&T) \u2014 <b>APPLIED 09/26, Under Review</b>',sector:'Bank (sell-side)',match:'high',url:'https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210747060',cv:'cv/Xu_Jingxiang_JPMorgan_Markets_CV.pdf',cl:'cover-letters/Xu_Jingxiang_JPMorgan_Markets_Cover_Letter.pdf',statusDefault:'Interview'},        {id:'bofa-gqs',deadline:'2026-09-30',closed:false,est:false,company:'Bank of America',role:'Global Quantitative Strategies (GQS) Summer Associate 2027, HK - <b>VIDEO INTERVIEW INVITED 10/2, due within 72h (App ID 5045631)</b> - NOT the Global Capital Markets SA posting (different, banking-track program); APAC slot 1 of 2',sector:'Bank (sell-side)',match:'high',url:'https://bankcampuscareers.tal.net/vx/mobile-0/brand-4/candidate/so/pm/1/pl/1/opp/14359-Global-Quantitative-Strategies-Summer-Associate-2027-Hong-Kong/en-GB',cv:'cv/Xu_Jingxiang_Bank_of_America_GQS_CV.pdf',cl:'cover-letters/Xu_Jingxiang_Bank_of_America_GQS_Cover_Letter.pdf',statusDefault:'Submitted'},
+        {id:'jpm-markets',deadline:'2026-09-30',closed:false,est:false,company:'J.P. Morgan',role:'CIB Markets Summer Analyst Program 2027, HK (S&T) \u2014 <b>APPLIED 09/26, Under Review</b>',sector:'Bank (sell-side)',match:'high',url:'https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210747060',cv:'cv/Xu_Jingxiang_JPMorgan_Markets_CV.pdf',cl:'cover-letters/Xu_Jingxiang_JPMorgan_Markets_Cover_Letter.pdf',statusDefault:'Submitted'},        {id:'bofa-gqs',deadline:'2026-09-30',closed:false,est:false,company:'Bank of America',role:'Global Quantitative Strategies Summer Associate 2027, HK - <b>APPLIED 09/29</b> (NY GQR 9/14 counts to the US cap; this is APAC slot 1 of 2)',sector:'Bank (sell-side)',match:'high',url:'https://bankcampuscareers.tal.net/vx/mobile-0/brand-4/candidate/so/pm/1/pl/1/opp/14359-Global-Quantitative-Strategies-Summer-Associate-2027-Hong-Kong/en-GB',cv:'cv/Xu_Jingxiang_Bank_of_America_GQS_CV.pdf',cl:'cover-letters/Xu_Jingxiang_Bank_of_America_GQS_Cover_Letter.pdf',statusDefault:'Submitted'},
         {id:'bofa-markets',deadline:'2026-09-30',closed:false,est:true,company:'Bank of America',role:'Global Markets S&T Rotational Summer Analyst 2027, HK - <b>APPLIED 09/29</b> (APAC slot 2 of 2, same tal.net account as NY GQR)',sector:'Bank (sell-side)',match:'high',url:'https://careers.bankofamerica.com/en-us/students/search-jobs?searchKeyword=Global%20Markets%20Summer%20Analyst%20Hong%20Kong',cv:'cv/Xu_Jingxiang_Bank_of_America_Markets_CV.pdf',cl:N,statusDefault:'Submitted'},
         {id:'gs-apac',deadline:'2026-10-04',closed:false,est:false,company:'Goldman Sachs',role:'FICC and Equities Quantitative Strats Summer Analyst 2027, HK - <b>APPLIED 09/30, Under Consideration</b> (GS cap: 4 combos/yr; NYC IB Quant Strats 9/28 + this = 2 used)',sector:'Bank (sell-side)',match:'medium',url:'https://www.goldmansachs.com/careers/students/programs-and-internships/asia-pacific/summer-analyst',cv:'cv/Xu_Jingxiang_Goldman_Sachs_Strats_CV.pdf',cl:N,statusDefault:'Submitted'},
         {id:'ms-ied-quant',deadline:'2026-10-31',closed:false,est:true,company:'Morgan Stanley',role:'2027 IED Quantitative Finance Summer Analyst/Associate, HK (JD on LinkedIn; apply via morganstanley.com)',sector:'Bank (sell-side)',match:'medium',url:'https://hk.linkedin.com/jobs/view/2027-institutional-equity-division-quantitative-finance-summer-analyst-associate-program-hong-kong-at-morgan-stanley-4436089249',cv:'cv/Xu_Jingxiang_Morgan_Stanley_CV.pdf',cl:N},
@@ -161,7 +55,7 @@
         {id:'millennium',deadline:'2026-10-31',closed:false,est:true,company:'Millennium (MLP)',role:'Quantitative Researcher Intern 2027, HK - <b>BLOCKED: Millennium 2-application cap already used (NY QR 8/29 + NY QD 9/2, both rejected; JD allows no further applications this season)</b>',sector:'Hedge fund',match:'high',url:'https://campusjobs.mlp.com/careers/job/755957778835-2027-quantitative-researcher-intern-hong-kong-hong-kong-hong-kong?domain=mlp.com',cv:'cv/Xu_Jingxiang_Millennium_MLP_CV.pdf',cl:N},
         {id:'citadel',deadline:'2026-10-31',closed:false,est:true,company:'Citadel Securities',role:'Quantitative Trader Intern (US) - <b>US APPLIED (single global profile; request HK team at interview, do not file Asia application)</b>',sector:'Prop trading',match:'high',url:'https://www.citadelsecurities.com/careers/details/quantitative-trader-intern-us',cv:'cv/Xu_Jingxiang_Citadel_Securities_CV.pdf',cl:N},
         {id:'optiver',deadline:'2026-10-31',closed:false,est:true,company:'Optiver',role:'Quantitative Intern Summer 2027, Austin/Chicago - <b>US APPLIED (HK covered: one active application at a time)</b>',sector:'Prop trading',match:'high',url:'https://www.optiver.com/join-us/jobs/trading/austin/quantitative-intern-summer-2027',cv:'cv/Xu_Jingxiang_Optiver_CV.pdf',cl:N},
-        {id:'sig-qst',deadline:'2026-10-31',closed:false,est:true,company:'SIG (Susquehanna)',role:'QST Internship Master\u2019s 2027 - <b>OA DONE, INTERVIEW SCHEDULED 10/8</b> (QR + QST both); US-based internship with HK placement - tell interviewer you want the Hong Kong office; do not duplicate. <a href="SIG_Interview_Prep_2026.pdf" target="_blank">Interview Prep PDF</a>',sector:'Prop trading',match:'high',url:'https://careers.sig.com/jobs/11122?lang=en-us',cv:'cv/Xu_Jingxiang_SIG_Susquehanna_CV.pdf',cl:N},
+        {id:'sig-qst',deadline:'2026-10-31',closed:false,est:true,company:'SIG (Susquehanna)',role:'QST Internship Master\u2019s 2027 - <b>OA DONE, INTERVIEW SCHEDULED 10/8</b> (QR + QST both); US-based internship with HK placement - tell interviewer you want the Hong Kong office; do not duplicate' <a class='link' href='SIG_Interview_Prep_2026.pdf' target='_blank'>Interview Prep PDF &#8599;</a>,sector:'Prop trading',match:'high',url:'https://careers.sig.com/jobs/11122?lang=en-us',cv:'cv/Xu_Jingxiang_SIG_Susquehanna_CV.pdf',cl:N},
         {id:'imc-qr',deadline:'2026-10-31',closed:false,est:true,company:'IMC Trading',role:'QR Intern 2027 HK - <b>US QT Intern OA COMPLETED (10/1), awaiting next step</b>; single-application rule - request HK consideration at interview; do not duplicate',sector:'Prop trading',match:'high',url:'https://www.imc.com/us/careers/jobs/4941208101',cv:'cv/Xu_Jingxiang_IMC_QR_CV.pdf',cl:N},
         {id:'deshaw',deadline:'2026-10-31',closed:false,est:true,company:'D. E. Shaw',role:'<b>NO separate HK internship exists.</b> All Summer 2027 intern postings are New York; HK is a placement option shared in the application. Action: email careers@deshaw.com - reference the 9/7 NYC QR application (rejected at resume stage) and request HK office consideration; do not re-file the same posting',sector:'Hedge fund',match:'high',url:'https://campus.deshaw.com/internships',cv:'cv/Xu_Jingxiang_DE_Shaw_CV.pdf',cl:N},
         {id:'point72-academy',deadline:'2026-10-15',closed:false,est:true,company:'Point72',role:'Academy Investment Analyst Summer Internship 2027, HK - <b>APPLIED 10/01</b> (rolling)',sector:'Hedge fund',match:'high',url:'https://careers.point72.com/CSJobDetail?jobName=2027-point72-academy-investment-analyst-summer-internship-program-hong-kong&jobCode=CPA-0014708&location=Hong%20Kong&locale=English&retURL=/CSCareerSearch',cv:'cv/Xu_Jingxiang_Point72_CV.pdf',cl:'cover-letters/Xu_Jingxiang_Point72_Cover_Letter.pdf',statusDefault:'Submitted'},
@@ -176,7 +70,7 @@
         {id:'fidelity',deadline:'2026-11-30',closed:false,est:true,company:'Fidelity International',role:'Summer Internship 2027 \u2014 Investment Directing, HK',sector:'Asset manager',match:'medium',url:'https://careers.fidelityinternational.com/early-careers-overview/interns-and-insights/internships',cv:'cv/Xu_Jingxiang_Fidelity_International_CV.pdf',cl:'cover-letters/Xu_Jingxiang_Fidelity_International_Cover_Letter.pdf'},
         {id:'ares',deadline:'2026-11-30',closed:false,est:true,company:'Ares Management',role:'Summer 2027 Internship Program (10 wks, APAC)',sector:'Asset manager',match:'medium',url:'https://www.aresmgmt.com/careers',cv:'cv/Xu_Jingxiang_Ares_CV.pdf',cl:'cover-letters/Xu_Jingxiang_Ares_Cover_Letter.pdf'},
         {id:'drw',deadline:'2026-11-30',closed:false,est:true,company:'DRW',role:'Quantitative Research Intern (US, Chicago) - <b>US APPLIED (one-track rule; HK office has no separate summer program)</b>',sector:'Prop trading',match:'high',url:'https://www.drw.com/work-at-drw/listings/quantitative-research-intern-3413670',cv:'cv/Xu_Jingxiang_DRW_CV.pdf',cl:N},
-        {id:'flowtraders',rolling:true,sortDate:'2026-10-15',deadline:'2026-11-30',closed:false,est:true,company:'Flow Traders',role:'Trading Intern (HK APAC floor, 6 wks, Jun-Jul 2027 intake; flights+accommodation covered, no visa needed w/ IANG) - <b>Rolling: apply immediately</b>',sector:'Prop trading',match:'high',url:'https://www.flowtraders.com/careers/job-description/8102618',cv:'cv/Xu_Jingxiang_Flow_Traders_CV.pdf',cl:'cover-letters/Xu_Jingxiang_Flow_Traders_Cover_Letter.pdf'},
+        {id:'flowtraders',rolling:true,sortDate:'2026-10-15',deadline:'2026-11-30',closed:false,est:true,company:'Flow Traders',role:'Trading / Quant Internship, HK - <b>Rolling: apply immediately</b> (seats fill before any stated close; DB closed 3 wks early)',sector:'Prop trading',match:'high',url:'https://www.flowtraders.com/careers',cv:'cv/Xu_Jingxiang_Flow_Traders_CV.pdf',cl:N},
         {id:'mako',rolling:true,sortDate:'2026-10-15',deadline:'2026-11-30',closed:false,est:true,company:'Mako Trading',role:'Quantitative Research Intern, HK - <b>Rolling: apply immediately</b>',sector:'Prop trading',match:'high',url:'https://www.mako.com/careers/',cv:'cv/Xu_Jingxiang_Mako_CV.pdf',cl:N},
         {id:'squarepoint',deadline:'2026-11-30',closed:false,est:true,company:'Squarepoint',role:'Intern Quant Researcher (single global posting: London/Paris/NY/Singapore/HK) - <b>APPLY NOW: one application only; preferred office NY, secondary HK+SG; mention April Nicole Liew exchange in cover letter; follow-up to Nicole from HKU email</b>',sector:'Hedge fund',match:'high',url:'https://job-boards.greenhouse.io/embed/job_app?for=squarepointcapital&token=243853',cv:'cv/Xu_Jingxiang_Squarepoint_CV.pdf',cl:'cover-letters/Xu_Jingxiang_Squarepoint_Cover_Letter.pdf'},
         {id:'worldquant',deadline:'2026-11-30',closed:false,est:true,company:'WorldQuant',role:'<b>Remote consultant path, not a standard internship (no US/HK summer intern posting exists):</b> register on BRAIN, submit alphas, paid by performance (top consultants $2k+/quarter); converts to full-time QR. Zero risk, parallel-friendly - start today',sector:'Hedge fund',match:'high',url:'https://platform.worldquantbrain.com/',cv:'cv/Xu_Jingxiang_WorldQuant_CV.pdf',cl:N},
@@ -249,6 +143,4 @@
         localStorage.removeItem('hk-dashboard-statuses-v2');
         location.reload();
       });
-    </script>
-  </body>
-</html>
+    
