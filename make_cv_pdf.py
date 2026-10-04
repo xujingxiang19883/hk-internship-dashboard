@@ -185,7 +185,7 @@ CONFIG = [    ("Flow_Traders","trading"), ("Squarepoint","quant"),
  ("Jump_Trading","trading"), ("Virtu_QR","trading"), ("Virtu_QT","trading"), ("TransMarket","trading"), ("Voloridge","quant"), ("BlackEdge","trading"), ("Anthelion","quant"), ("Stevens_Capital","quant"), ("AllOptions","trading"), ("GroupOne","trading"), ("Kershner","trading"), ("PEAK6","trading"), ("YIntercept","quant"), ("Tower_Research","trading"), ("HRT","trading"),
  ("Bank_of_America_GQS","bank"), ("Bank_of_America_Markets","trading"),  ("Goldman_Sachs_Strats","bank"),
  ("JPMorgan_MarketsQR","trading"), 
- ("Citi","bank"), ("JPM_US_AMQR","quant"),  ("Point72","quant"),
+ ("Citi","bank"), ("OldMission","bank"), ("Quantbot_QD","bank"), ("InfiniteQuant","bank"), ("Quantic","bank"), ("JPM_US_AMQR","quant"),  ("Point72","quant"),
     
 ]
 

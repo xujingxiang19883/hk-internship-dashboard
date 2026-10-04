@@ -45,6 +45,18 @@ ROWS = [
  ("Virtu Financial", "2027 Internship - Quantitative Trading", "Austin / Chicago / New York", "Open now",
   "https://job-boards.greenhouse.io/virtu/jobs/8624408002?gh_jid=8624408002",
   "Xu_Jingxiang_Virtu_QT_CV.pdf"),
+ ("Old Mission Capital", "Software Engineer - 2027 Internship Program (June Start, trading-firm SWE/QD)", "Chicago, IL", "Open now",
+  "https://www.oldmissioncapital.com/careers/?gh_jid=7796180003",
+  "Xu_Jingxiang_OldMission_CV.pdf"),
+ ("Quantbot Technologies", "Quantitative Developer Internship - 2027", "New York, NY", "Open now",
+  "https://www.quantbot.com/careers/4341038009?gh_jid=4341038009",
+  "Xu_Jingxiang_Quantbot_QD_CV.pdf"),
+ ("InfiniteQuant", "Quantitative Developer Internship - Summer 2027", "New York, NY", "2026-10-23 deadline",
+  "https://jobright.ai",
+  "Xu_Jingxiang_InfiniteQuant_CV.pdf"),
+ ("Quantic", "Quantitative Developer Intern - Summer 2027 (10 weeks)", "Boston, MA", "Open now",
+  "https://www.quantic.com",
+  "Xu_Jingxiang_Quantic_CV.pdf"),
 ]
 
 NAVY = "1B2A4A"; LIGHT = "D6E4F0"; N100 = "F7F7F5"; N600 = "8C8A84"; N900 = "37352F"
@@ -57,7 +69,7 @@ ws.title = "Tier-1 US QR-QT Internships"
 # Title row
 ws.merge_cells("A1:F1")
 c = ws["A1"]
-c.value = "US Summer 2027 QR / QT Internships - Tier-1+2 New Targets (11 firms) (Jing Xiang Xu) - compiled 2026-10-03"
+c.value = "US Summer 2027 QR / QT Internships - Tier-1+2 New Targets (15 firms incl. QD) (Jing Xiang Xu) - compiled 2026-10-03"
 c.font = Font(bold=True, size=13, color=NAVY)
 c.alignment = Alignment(horizontal="left", vertical="center")
 ws.row_dimensions[1].height = 24
@@ -104,7 +116,8 @@ notes = [
  "2. Deadlines are rolling - seats fill without notice (Deutsche Bank closed 3 weeks early). Apply in list order: QR-fit firms first (Voloridge, Anthelion, Stevens), then QT (TransMarket, BlackEdge, All Options, Group One, Kershner), then PEAK6 bootcamp.",
  "3. CVs are the in-place-tailored one-page PDFs in D:\\zcode\\hk-dashboard\\cv\\ (trading template for QT roles, quant-research template for QR roles).",
  "4. Jump / Tower / HRT excluded from this sheet - already self-applying (tracked in the main dashboard).",
-"5. Tier-2 audit results: Virtu CONFIRMED (rows 10-11). Trexquant QR intern on LinkedIn (actively hiring, no public apply link - search Trexquant on LinkedIn). Balyasny/Headlands: QR internships exist but 2027 cycle unconfirmed or PhD-only. GSA: QR intern is London-only (NY is full-time). Teza: no intern role on Ashby board (QR All Streams is full-time). Wolverine: no intern postings live on wolve.com. Vatic/Selini: no intern roles. Wintermute: grad algo trader London only. Old Mission: QT 2027 Graduate full-time only. PDT/Voleon/Radix/CTC/Pinely/Qube-US: no public intern postings (Qube has QR&T intern in SINGAPORE).",
+ "5. QD additions (user request): Old Mission / Quantbot / InfiniteQuant / Quantic added - US QD internships found beyond the 69+11 firms. Point72 QSD intern EXCLUDED - JD is systems programming (Linux kernel/compilers), not quant research infra.",
+ "7. Tier-2 audit results: Virtu CONFIRMED (rows 10-11). Trexquant QR intern on LinkedIn (actively hiring, no public apply link - search Trexquant on LinkedIn). Balyasny/Headlands: QR internships exist but 2027 cycle unconfirmed or PhD-only. GSA: QR intern is London-only (NY is full-time). Teza: no intern role on Ashby board. Wolverine: no intern postings live on wolve.com. Vatic/Selini: no intern roles. Wintermute: grad algo trader London only. Old Mission QT 2027 Graduate full-time also live. PDT/Voleon/Radix/CTC/Pinely/Qube-US: no public intern postings (Qube has QR&T intern in SINGAPORE).",
 ]
 for i, n in enumerate(notes):
     cell = ws.cell(row=note_r + i, column=1, value=n)
