@@ -182,7 +182,7 @@ SPECIALS = {
 CONFIG = [    ("Flow_Traders","trading"), ("Squarepoint","quant"),
  ("WorldQuant","quant"), ("Ubiquant","quant"), ("High_Flyer","quant"), ("Minghong","quant"),
  ("Lingjun","quant"), ("Wizard_Quant","quant"), ("Dymon_Asia","quant"),
- ("Jump_Trading","trading"), ("Tower_Research","trading"), ("HRT","trading"),
+ ("Jump_Trading","trading"), ("TransMarket","trading"), ("Voloridge","quant"), ("BlackEdge","trading"), ("Anthelion","quant"), ("Stevens_Capital","quant"), ("AllOptions","trading"), ("GroupOne","trading"), ("Kershner","trading"), ("PEAK6","trading"), ("YIntercept","quant"), ("Tower_Research","trading"), ("HRT","trading"),
  ("Bank_of_America_GQS","bank"), ("Bank_of_America_Markets","trading"),  ("Goldman_Sachs_Strats","bank"),
  ("JPMorgan_MarketsQR","trading"), 
  ("Citi","bank"), ("JPM_US_AMQR","quant"),  ("Point72","quant"),

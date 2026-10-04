@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="A personal tracker for verified 2026 internship applications." />
+    <title>Application Dashboard · 2026</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23172a45'/%3E%3Cpath d='M17 45V19h9l6 13 6-13h9v26h-8V31l-7 14-7-14v14z' fill='%236fd3c2'/%3E%3C/svg%3E" />
+    <style>
+      :root { --navy:#12233c; --ink:#19253a; --muted:#68758a; --line:#dbe3ed; --paper:#f5f7fb; --aqua:#0d8f82; --gold:#b47712; --rose:#b53f4d; --shadow:0 12px 35px rgba(19,35,60,.08); }
+      * { box-sizing:border-box; }
+      body { margin:0; color:var(--ink); background:var(--paper); font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size:16px; line-height:1.45; }
+      .shell { max-width:1440px; margin:0 auto; padding:32px 24px 48px; }
+      .masthead { display:flex; justify-content:space-between; gap:24px; align-items:flex-end; padding:12px 4px 26px; }
+      h1 { margin:0; color:var(--navy); font-size:clamp(1.7rem,3vw,2.45rem); letter-spacing:-.04em; line-height:1.08; }
+      .eyebrow { margin:0 0 7px; color:var(--aqua); font-weight:750; font-size:.78rem; letter-spacing:.11em; text-transform:uppercase; }
+      .subtitle { max-width:690px; margin:10px 0 0; color:var(--muted); }
+      .save-note { max-width:330px; color:var(--muted); font-size:.86rem; text-align:right; }
+      .save-note strong { color:var(--aqua); }
+      .market-tabs { display:flex; gap:8px; margin:0 0 18px 4px; }
+      .market-tab { border-color:#cbd5e1; background:#fff; }
+      .market-tab[aria-selected="true"] { border-color:var(--navy); color:#fff; background:var(--navy); }
+      .metrics { display:grid; grid-template-columns:repeat(5,minmax(115px,1fr)); gap:12px; margin-bottom:18px; }
+      .metric { min-height:92px; padding:16px; border:1px solid var(--line); border-radius:13px; background:#fff; box-shadow:var(--shadow); }
+      .metric .label { color:var(--muted); font-size:.76rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; }
+      .metric .value { display:block; margin-top:6px; color:var(--navy); font-size:1.65rem; font-weight:760; letter-spacing:-.04em; }
+      .panel { overflow:hidden; border:1px solid var(--line); border-radius:16px; background:#fff; box-shadow:var(--shadow); }
+      .toolbar { display:flex; justify-content:space-between; gap:16px; align-items:center; padding:18px 20px; border-bottom:1px solid var(--line); }
+      .toolbar p { margin:0; color:var(--muted); font-size:.9rem; }
+      .auth-controls { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:8px; align-items:center; }
+      .auth-controls input { width:230px; border:1px solid #cbd5e1; border-radius:8px; padding:8px 9px; color:var(--navy); font:inherit; font-size:.85rem; }
+      .owner-tools { display:flex; justify-content:flex-end; padding:14px 20px; border-bottom:1px solid var(--line); background:#fbfcfe; }
+      .entry-form { display:grid; grid-template-columns:150px minmax(155px,1fr) minmax(235px,1.7fr) minmax(250px,1.35fr); gap:12px; padding:18px 20px 20px; border-bottom:1px solid var(--line); background:#fbfcfe; }
+      .entry-form[hidden], .owner-tools[hidden] { display:none; }
+      .field { display:flex; flex-direction:column; gap:5px; }
+      .field label { color:#506079; font-size:.72rem; font-weight:760; letter-spacing:.06em; text-transform:uppercase; }
+      .field input { width:100%; border:1px solid #cbd5e1; border-radius:8px; padding:9px 10px; color:var(--navy); background:#fff; font:inherit; font-size:.88rem; }
+      .drop-zone { grid-column:span 2; display:flex; min-height:72px; align-items:center; justify-content:center; border:1.5px dashed #a9c6d7; border-radius:10px; color:#517087; background:#fff; font-size:.86rem; font-weight:650; text-align:center; cursor:pointer; }
+      .drop-zone.dragging { border-color:var(--aqua); background:#f2fcfa; color:#08756b; }
+      .form-actions { display:flex; align-items:flex-end; justify-content:flex-end; gap:8px; }
+      .form-help { grid-column:1 / -1; margin:0; color:var(--muted); font-size:.8rem; }
+      button { border:1px solid #b8c5d5; border-radius:8px; padding:8px 11px; color:var(--navy); background:#fff; font:inherit; font-size:.85rem; font-weight:700; cursor:pointer; }
+      button:hover { border-color:var(--aqua); color:var(--aqua); }
+      .table-wrap { overflow-x:auto; }
+      table { width:100%; min-width:1390px; border-collapse:collapse; }
+      th { padding:12px 16px; color:#506079; background:#f7f9fc; border-bottom:1px solid var(--line); text-align:left; font-size:.73rem; letter-spacing:.07em; text-transform:uppercase; white-space:nowrap; }
+      td { padding:14px 16px; border-bottom:1px solid #e8edf3; vertical-align:top; }
+      tbody tr:last-child td { border-bottom:0; }
+      tbody tr:hover { background:#fbfcfe; }
+      .company { color:var(--navy); font-weight:760; }
+      .role { max-width:375px; color:#344057; }
+      .date { white-space:nowrap; color:#4d5c72; font-variant-numeric:tabular-nums; }
+      .link { display:inline-flex; align-items:center; gap:4px; color:#0b6d8a; font-weight:700; font-size:.88rem; text-decoration:none; white-space:nowrap; }
+      .link:hover { text-decoration:underline; }
+      .missing { color:#8994a6; font-size:.87rem; }
+      .status-editor { min-width:185px; border:1px solid #cbd5e1; border-radius:8px; padding:7px 9px; color:var(--navy); background:#fff; font:inherit; font-size:.87rem; font-weight:700; }
+      .status-editor.status-rejected { border-color:#f2b8bd; color:#9f2935; background:#fff7f7; }
+      .status-editor.status-oa { border-color:#efd49c; color:#8a5a00; background:#fffaf0; }
+      .status-editor.status-submitted { border-color:#a9ded6; color:#08756b; background:#f2fcfa; }
+      .status-editor.status-interview { border-color:#b9c8f1; color:#3455a0; background:#f5f7ff; }
+      .status-editor:disabled { cursor:not-allowed; opacity:.82; }
+      .status-cell { display:inline-flex; gap:7px; width:375px !important; min-width:375px !important; max-width:375px !important; }
+      .status-cell > * { box-sizing:border-box; flex:1 1 0; min-width:0; }
+      .status-cell .status-editor { width:100%; }
+      .oa-followup { display:flex; align-items:center; gap:7px; min-height:35px; padding:5px 7px; border:1px solid #efd49c; border-radius:8px; background:#fffaf0; color:#765513; font-size:.78rem; font-weight:700; white-space:nowrap; }
+      .oa-followup input[type="text"] { width:112px; border:0; color:#765513; background:transparent; font:inherit; font-size:.78rem; font-weight:700; }
+      .oa-followup input:disabled { opacity:.75; }
+      .interview-followup { border-color:#b9c8f1; background:#f5f7ff; color:#3455a0; }
+      .interview-followup input[type="text"] { color:#3455a0; }
+      .followup-readonly { overflow:hidden; text-overflow:ellipsis; }
+      .upload-missing { padding:5px 8px; border-style:dashed; color:#0b6d8a; font-size:.8rem; }
+      .upload-missing.dragging { border-color:var(--aqua); color:#08756b; background:#f2fcfa; }
+      .footer { display:flex; justify-content:space-between; gap:20px; margin:18px 4px 0; color:var(--muted); font-size:.82rem; }
+      @media (max-width:900px) { .metrics { grid-template-columns:repeat(3,1fr); } .masthead { align-items:flex-start; flex-direction:column; } .save-note { text-align:left; } .entry-form { grid-template-columns:repeat(2,minmax(0,1fr)); } .drop-zone { grid-column:span 1; } }
+      @media (max-width:560px) { .shell { padding:22px 14px 32px; } .metrics { grid-template-columns:repeat(2,1fr); } .toolbar { align-items:flex-start; flex-direction:column; } .auth-controls { justify-content:flex-start; } .metric { min-height:80px; } }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="masthead">
+        <div>
+          <p class="eyebrow">Verified applications · 2026</p>
+          <h1>Job application dashboard</h1>
+          <p class="subtitle">Chronological record of submitted applications and employer updates. Status changes are saved permanently after owner sign-in.</p>
+        </div>
+        <div class="save-note" id="save-note">Loading <strong>permanent status storage</strong>…</div>
+      </header>
+
+      <section class="metrics" aria-label="Application summary">
+        <div class="metric"><span class="label">Total</span><span class="value" id="metric-total">0</span></div>
+        <div class="metric"><span class="label">Application Submitted</span><span class="value" id="metric-submitted">0</span></div>
+        <div class="metric"><span class="label">OA Received</span><span class="value" id="metric-oa">0</span></div>
+        <div class="metric"><span class="label">Interview Received</span><span class="value" id="metric-interview">0</span></div>
+        <div class="metric"><span class="label">Rejected</span><span class="value" id="metric-rejected">0</span></div>
+      </section>
+
+      <div class="market-tabs" role="tablist" aria-label="Application market">
+        <button class="market-tab" type="button" role="tab" id="market-us" aria-selected="true">United States</button>
+        <button class="market-tab" type="button" role="tab" id="market-hk" aria-selected="false">Hong Kong</button>
+      </div>
+
+      <section class="panel" aria-labelledby="tracker-title">
+        <div class="toolbar">
+          <p id="tracker-title">Sorted by submitted date, earliest first. “Not captured” means no role-specific document was retained.</p>
+          <div class="auth-controls">
+            <input type="email" id="auth-email" placeholder="Cornell email for editing" autocomplete="email" />
+            <button type="button" id="send-link">Sign in to edit</button>
+            <button type="button" id="sign-out" hidden>Sign out</button>
+          </div>
+        </div>
+        <div class="owner-tools" id="owner-tools" hidden><button type="button" id="add-application">Add application</button></div>
+        <form class="entry-form" id="entry-form" hidden>
+          <div class="field"><label for="entry-date">Submitted</label><input id="entry-date" type="date" required /></div>
+          <div class="field"><label for="entry-company">Company</label><input id="entry-company" type="text" placeholder="Company name" required /></div>
+          <div class="field"><label for="entry-role">Role</label><input id="entry-role" type="text" placeholder="Internship or position title" required /></div>
+          <div class="field"><label for="entry-url">Application / JD URL</label><input id="entry-url" type="url" placeholder="https://…" /></div>
+          <div class="drop-zone" id="drop-zone" role="button" tabindex="0" aria-label="Upload resume PDF">Drop a resume PDF here, or click to choose one<input id="resume-file" type="file" accept="application/pdf,.pdf" hidden /></div>
+          <div class="drop-zone" id="cover-letter-drop-zone" role="button" tabindex="0" aria-label="Upload cover letter PDF">Drop a cover letter PDF here, or click to choose one<input id="cover-letter-file" type="file" accept="application/pdf,.pdf" hidden /></div>
+          <div class="form-actions"><button type="button" id="cancel-entry">Cancel</button><button type="submit" id="save-entry">Save application</button></div>
+          <p class="form-help" id="form-help">Both PDFs are optional; files are limited to 10 MB and published as “Open PDF ↗” links.</p>
+        </form>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Submitted</th><th>Company</th><th>Role</th><th>Current status</th><th>Application / JD</th><th>Resume PDF</th><th>Cover Letter</th></tr></thead>
+            <tbody id="application-rows"></tbody>
+          </table>
+          <datalist id="status-options"><option value="Rejected"></option><option value="OA Received"></option><option value="Application Submitted"></option><option value="Interview Received"></option></datalist>
+        </div>
+      </section>
+      <footer class="footer"><span>Default statuses reflect the latest verified record.</span><span>Last compiled: 2026-09-24</span></footer>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      const defaultApplications = [
+        {id:'millennium-qr',date:'2026-08-29',company:'Millennium Management',role:'2027 Quantitative Researcher Intern, New York',status:'Rejected',url:'https://campusjobs.mlp.com/careers/job/755957778843-2027-quantitative-researcher-intern-new-york-new-york-new-york-united-states-of-america?domain=mlp.com',resume:null},
+        {id:'millennium-qd',date:'2026-09-02',company:'Millennium Management',role:'2027 Quantitative Developer Intern, New York',status:'Rejected',url:'https://campusjobs.mlp.com/careers/job/755957819661-2027-quantitative-developer-intern-new-york-new-york-new-york-united-states-of-america?domain=mlp.com',resume:null},
+        {id:'deshaw',date:'2026-09-07',company:'D. E. Shaw',role:'Quantitative Analyst Intern, New York, Summer 2027',status:'Rejected',url:'https://www.deshaw.com/careers/quantitative-analyst-intern-new-york-summer-2027-5890',resume:'Xu.Jingxiang.DE_Shaw_Quantitative_Analyst_Intern.pdf'},
+        {id:'jane',date:'2026-09-08',company:'Jane Street',role:'Role not specified in employer email',status:'Rejected',url:'https://www.janestreet.com/join-jane-street/position/8498547002/',resume:'Xu.Jingxiang.Jane_Street_Quantitative_Researcher_Intern.pdf'},
+        {id:'susquehanna-qr',date:'2026-09-09',company:'Susquehanna',role:'Quantitative Research position',status:'OA received',url:'https://careers.sig.com/jobs/10820?lang=en-us',resume:'Xu.Jingxiang.Susquehanna_Quantitative_Research_Intern.pdf'},
+        {id:'susquehanna-st',date:'2026-09-09',company:'Susquehanna',role:'Quantitative Systematic Trading position',status:'OA received',url:'https://careers.sig.com/jobs/10820?lang=en-us',resume:null},
+        {id:'arrowstreet',date:'2026-09-14',company:'Arrowstreet Capital',role:'Quantitative Developer Intern, Summer 2027 (R1506)',status:'In Progress',url:'https://arrowstreetcapital.wd5.myworkdayjobs.com/en-US/Campus_Careers/job/Quantitative-Developer-Intern--Summer-2027_R1506',resume:'Xu.Jingxiang.Arrowstreet_Quant_Developer_Intern.pdf'},
+        {id:'applied-academics',date:'2026-09-14',company:'Applied Academics LLC',role:'Quantitative Analyst Intern',status:'Submitted',url:'https://cornell.joinhandshake.com/job-search/11412195',resume:'Xu.Jingxiang.Applied_Academics_Analyst_Intern_JD.pdf'},
+        {id:'imc',date:'2026-09-14',company:'IMC Trading',role:'Quantitative Trader Intern, Summer 2027',status:'OA received',url:'https://www.imc.com/us/careers/jobs/4823923101/apply',resume:'Xu.Jingxiang.IMC_Trader_Intern_JD.pdf'},
+        {id:'walleye',date:'2026-09-14',company:'Walleye Capital',role:'Quantitative Developer Intern, Summer 2027',status:'Received / under review',url:'https://job-boards.greenhouse.io/walleyecapital-external-students/jobs/4679168006',resume:'Xu.Jingxiang.Walleye_Quantic_Developer_Intern.pdf'},
+        {id:'seven',date:'2026-09-14',company:'Seven Research',role:'Quantitative Researcher Intern',status:'Received',url:'https://job-boards.greenhouse.io/sevenresearch/jobs/4894946008',resume:'Xu.Jingxiang.Seven_Research_Quant_Researcher_Intern.pdf'},
+        {id:'bofa',date:'2026-09-14',company:'Bank of America',role:'Global Quantitative Research Summer Associate Program, 2027',status:'OA outstanding',url:'https://bankcampuscareers.tal.net/vx/brand-4/spa-1/candidate/so/pm/1/pl/1/opp/14896-Global-Quantitative-Research-Summer-Associate-Program-2027/en-GB',resume:'Xu.Jingxiang.BofA_Global_Quant_Research_2027.pdf'},
+        {id:'ridgeline',date:'2026-09-18',company:'Ridgeline',role:'Software Engineer Intern, Summer 2027 (Cornell)',status:'Received / under review',url:'https://job-boards.greenhouse.io/ridgeline-early-careers/jobs/7990768003',resume:null},
+        {id:'fidelity-mas',date:'2026-09-22',company:'Fidelity Investments',role:'Quantitative Research Intern, Multi-Asset Systematic Research Team',status:'Rejected',url:'https://wd1.myworkdaysite.com/recruiting/fmr/targeted/job/200-Seaport-Blvd-Boston-MA/Quantitative-Research-Intern--Multi-Asset-Systematic-Research-Team_2135128',resume:'Xu.Jingxiang.Fidelity_Multi_Asset_Systematic_Research_2027.pdf'},
+        {id:'fidelity-fi',date:'2026-09-22',company:'Fidelity Investments',role:'Quantitative Research Intern, Fixed Income Team',status:'Rejected',url:'https://wd1.myworkdaysite.com/recruiting/fmr/targeted/job/200-Seaport-Blvd-Boston-MA/Quantitative-Research-Intern--Fixed-Income-Team_2135109',resume:'Xu.Jingxiang.Fidelity_Fixed_Income_Quantitative_Research_2027.pdf'},
+        {id:'barclays',date:'2026-09-23',company:'Barclays',role:'Quantitative Finance Associate Summer Internship Program, 2027 (New York)',status:'OA received',url:'https://barclays.wd3.myworkdayjobs.com/External_Career_Site_Barclays/job/New-York-745-7th-Avenue/Quantitative-Finance-Associate-Summer-Internship-Program-2027-New-York_JR-0000128099',resume:'Xu.Jingxiang.Barclays_Quantitative_Analytics_2027.pdf'},
+        {id:'quadeye-qr',date:'2026-09-23',company:'Quadeye',role:'Quantitative Researcher - Intern, Summer 2027',status:'Submitted',url:'https://cornell.joinhandshake.com/jobs/11430969',resume:'Xu.Jingxiang.Quadeye_Quantitative_Researcher_Intern_2027.pdf'},
+        {id:'400-capital-portfolio-risk',date:'2026-09-23',company:'400 Capital Management',role:'2027 Summer Intern, Portfolio Strategies and Risk Management',status:'Submitted',url:'https://cornell.joinhandshake.com/jobs/11436753',resume:'Xu.Jingxiang.400_Capital_Portfolio_Strategies_Risk_2027.pdf'},
+        {id:'balbec-direct',date:'2026-09-24',company:'Balbec Capital LP',role:'2027 Quantitative Summer Analyst',status:'Application received / reviewing',url:'https://balbec.extensishrtalent.com/careers/JobDetail?v2enc=EqwuWGHwdzj5mAATPH9Hp4pmFLQw6N0zbPLxXzon4w8=',resume:'Xu.Jingxiang.Balbec_Quantitative_Summer_Analyst.pdf'},
+        {id:'neuberger-quantitative-intern',date:'2026-09-24',company:'Neuberger Berman',role:'Quantitative 2027 Summer Intern',status:'Submitted',url:'https://nb.wd1.myworkdayjobs.com/NBCareers/job/New-York-NY/Quantitative-2027-Summer-Intern_R0012643',resume:'Xu.Jingxiang.Neuberger_Intern.pdf'}
+      ].sort((a,b) => a.date.localeCompare(b.date) || a.company.localeCompare(b.company));
+
+      const statusChoices = ['Rejected', 'OA Received', 'Application Submitted', 'Interview Received'];
+      const OWNER_EMAIL = 'jx466@cornell.edu';
+      const HK_PREFIX = '[[HK]] ';
+      const supabaseClient = window.supabase.createClient(
+        'https://znvwtwkvisyqlxkoifki.supabase.co',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpudnd0d2t2aXN5cWx4a29pZmtpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA0MTQ0MDQsImV4cCI6MjEwNTk5MDQwNH0.MpBGnfENO_PZunZaUyMytSfGorJ278vA5JHoCxS2IXA'
+      );
+      const remoteStatuses = {};
+      const remoteFollowups = {};
+      const remoteFollowupKeys = {};
+      const remoteInterviewDates = {};
+      const remoteInterviewDateKeys = {};
+      const remoteDocuments = {};
+      const FOLLOWUP_PREFIX = '__oa_followup__:';
+      const INTERVIEW_DATE_PREFIX = '__interview_date__:';
+      const customApplications = [];
+      const dashboardMetadata = { followups: {}, resumes: {}, coverLetters: {} };
+      const metadataPath = 'metadata/dashboard.json';
+      let session = null;
+      const rows = document.getElementById('application-rows');
+      const authEmail = document.getElementById('auth-email');
+      const sendLink = document.getElementById('send-link');
+      const signOut = document.getElementById('sign-out');
+      const saveNote = document.getElementById('save-note');
+      const ownerTools = document.getElementById('owner-tools');
+      const addApplication = document.getElementById('add-application');
+      const entryForm = document.getElementById('entry-form');
+      const entryDate = document.getElementById('entry-date');
+      const entryCompany = document.getElementById('entry-company');
+      const entryRole = document.getElementById('entry-role');
+      const entryUrl = document.getElementById('entry-url');
+      const resumeFile = document.getElementById('resume-file');
+      const dropZone = document.getElementById('drop-zone');
+      const coverLetterFile = document.getElementById('cover-letter-file');
+      const coverLetterDropZone = document.getElementById('cover-letter-drop-zone');
+      const cancelEntry = document.getElementById('cancel-entry');
+      const saveEntry = document.getElementById('save-entry');
+      const formHelp = document.getElementById('form-help');
+      const marketUs = document.getElementById('market-us');
+      const marketHk = document.getElementById('market-hk');
+      const escapeHtml = text => String(text).replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+      const normalizeStatus = status => {
+        const value = String(status).toLowerCase();
+        if (value === 'rejected') return 'Rejected';
+        if (value.includes('oa')) return 'OA Received';
+        if (value.includes('interview')) return 'Interview Received';
+        return 'Application Submitted';
+      };
+      const isOwner = () => session?.user?.email?.toLowerCase() === OWNER_EMAIL;
+      let currentMarket = new URLSearchParams(window.location.search).get('market') === 'hk' ? 'HK' : 'US';
+      const allApplications = () => [
+        ...(currentMarket === 'US' ? defaultApplications : []),
+        ...customApplications.filter(app => app.market === currentMarket)
+      ].sort((a,b) => a.date.localeCompare(b.date) || a.company.localeCompare(b.company));
+      const currentStatus = app => statusChoices.includes(remoteStatuses[app.id]) ? remoteStatuses[app.id] : normalizeStatus(app.status);
+      const classFor = status => status === 'Rejected' ? 'status-rejected' : status === 'OA Received' ? 'status-oa' : status === 'Interview Received' ? 'status-interview' : 'status-submitted';
+      const followupLabel = followup => followup.note || (followup.done ? 'Done' : followup.due ? `Due ${new Date(`${followup.due}T00:00:00`).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' })}` : '');
+      const followupKey = (applicationId, note) => `${FOLLOWUP_PREFIX}${encodeURIComponent(applicationId)}:${encodeURIComponent(note)}`;
+      const interviewDateKey = (applicationId, date) => `${INTERVIEW_DATE_PREFIX}${encodeURIComponent(applicationId)}:${encodeURIComponent(date)}`;
+      const parseAuxiliaryKey = (key, prefix) => {
+        const rest = key.slice(prefix.length);
+        const separator = rest.indexOf(':');
+        if (separator === -1) return null;
+        try { return { applicationId: decodeURIComponent(rest.slice(0, separator)), value: decodeURIComponent(rest.slice(separator + 1)) }; }
+        catch (_) { return null; }
+      };
+      const parseFollowupKey = key => {
+        const parsed = parseAuxiliaryKey(key, FOLLOWUP_PREFIX);
+        return parsed ? { applicationId: parsed.applicationId, note: parsed.value } : null;
+      };
+      const parseInterviewDateKey = key => parseAuxiliaryKey(key, INTERVIEW_DATE_PREFIX);
+      const isValidMonthDay = value => {
+        if (!/^\d{2}\/\d{2}$/.test(value)) return false;
+        const [month, day] = value.split('/').map(Number);
+        return month >= 1 && month <= 12 && day >= 1 && day <= new Date(2028, month, 0).getDate();
+      };
+      const updateAuthUi = () => {
+        const owner = isOwner();
+        authEmail.hidden = owner;
+        sendLink.hidden = owner;
+        signOut.hidden = !owner;
+        ownerTools.hidden = !owner;
+        if (!owner) entryForm.hidden = true;
+        if (owner) saveNote.innerHTML = 'Signed in as <strong>owner</strong>. Changes save permanently.';
+        else if (!session) saveNote.innerHTML = 'View-only. Sign in with the <strong>Cornell owner email</strong> to save changes.';
+        else saveNote.innerHTML = 'This account has <strong>view-only access</strong>.';
+      };
+      const updateMarketUi = () => {
+        const isHongKong = currentMarket === 'HK';
+        marketUs.setAttribute('aria-selected', String(!isHongKong));
+        marketHk.setAttribute('aria-selected', String(isHongKong));
+        addApplication.textContent = `Add ${isHongKong ? 'Hong Kong' : 'US'} application`;
+        document.getElementById('tracker-title').textContent = isHongKong
+          ? 'Hong Kong applications. This list starts empty and is sorted by submitted date.'
+          : 'US applications, sorted by submitted date, earliest first. “Not captured” means no role-specific document was retained.';
+        const url = new URL(window.location.href);
+        if (isHongKong) url.searchParams.set('market', 'hk'); else url.searchParams.delete('market');
+        window.history.replaceState({}, '', url);
+      };
+      const render = () => {
+        rows.innerHTML = allApplications().map(app => {
+          const current = currentStatus(app);
+          const posting = app.url ? `<a class="link" href="${escapeHtml(app.url)}" target="_blank" rel="noopener noreferrer">Open posting ↗</a>` : '<span class="missing">Not captured</span>';
+          const documentCell = (kind, label) => {
+            const documentType = kind === 'resume' ? 'resume' : 'cover_letter';
+            const legacyKey = kind === 'resume' ? 'resumes' : 'coverLetters';
+            const databasePath = remoteDocuments[app.id]?.[documentType];
+            const legacyPath = dashboardMetadata[legacyKey][app.id];
+            const href = databasePath || legacyPath
+              ? publicResumeUrl(databasePath || legacyPath)
+              : kind === 'resume'
+                ? app.resumeUrl || (app.resume ? `resumes/${encodeURIComponent(app.resume)}` : null)
+                : app.coverLetterUrl || (app.coverLetter ? `cover-letters/${encodeURIComponent(app.coverLetter)}` : null);
+            return href
+              ? `<a class="link" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">Open PDF ↗</a>`
+              : isOwner()
+                ? `<button type="button" class="upload-missing" data-id="${app.id}" data-kind="${kind}">Upload PDF</button><input class="document-upload" data-id="${app.id}" data-kind="${kind}" type="file" accept="application/pdf,.pdf" hidden />`
+                : '<span class="missing">Not captured</span>';
+          };
+          const resume = documentCell('resume', 'Resume');
+          const coverLetter = documentCell('cover-letter', 'Cover letter');
+          const followup = { note: remoteFollowups[app.id] || '' };
+          const interviewDate = remoteInterviewDates[app.id] || '';
+          const statusControl = current === 'OA Received'
+            ? `<div class="status-cell" style="width:375px;min-width:375px;max-width:375px"><input class="status-editor ${classFor(current)}" data-id="${app.id}" value="${escapeHtml(current)}" list="status-options" aria-label="Current status for ${escapeHtml(app.company)}" ${isOwner() ? '' : 'disabled'} /><div class="oa-followup">${isOwner() ? `<input class="followup-note" data-id="${app.id}" type="text" value="${escapeHtml(followupLabel(followup))}" placeholder="Done or Due 06/09" aria-label="OA follow-up for ${escapeHtml(app.company)}" />` : `<span class="followup-readonly">${escapeHtml(followupLabel(followup)) || 'Pending'}</span>`}</div></div>`
+            : current === 'Interview Received'
+              ? `<div class="status-cell" style="width:375px;min-width:375px;max-width:375px"><input class="status-editor ${classFor(current)}" data-id="${app.id}" value="${escapeHtml(current)}" list="status-options" aria-label="Current status for ${escapeHtml(app.company)}" ${isOwner() ? '' : 'disabled'} /><div class="oa-followup interview-followup">${isOwner() ? `<input class="interview-date" data-id="${app.id}" type="text" inputmode="numeric" maxlength="5" value="${escapeHtml(interviewDate)}" placeholder="MM/DD" aria-label="Interview date for ${escapeHtml(app.company)}" />` : `<span class="followup-readonly">${escapeHtml(interviewDate) || 'Pending'}</span>`}</div></div>`
+            : `<input class="status-editor ${classFor(current)}" data-id="${app.id}" value="${escapeHtml(current)}" list="status-options" aria-label="Current status for ${escapeHtml(app.company)}" ${isOwner() ? '' : 'disabled'} />`;
+          return `<tr><td class="date">${app.date}</td><td class="company">${escapeHtml(app.company)}</td><td class="role">${escapeHtml(app.role)}</td><td>${statusControl}</td><td>${posting}</td><td>${resume}</td><td>${coverLetter}</td></tr>`;
+        }).join('');
+        rows.querySelectorAll('.status-editor').forEach(input => input.addEventListener('change', event => {
+          const next = event.target.value.trim();
+          if (!statusChoices.includes(next)) {
+            event.target.value = currentStatus(allApplications().find(app => app.id === event.target.dataset.id));
+            document.getElementById('save-note').innerHTML = 'Choose one of the <strong>four listed statuses</strong>.';
+            return;
+          }
+          saveStatus(event.target.dataset.id, next);
+        }));
+        rows.querySelectorAll('.followup-note').forEach(input => input.addEventListener('change', event => {
+          saveFollowup(event.target.dataset.id, { note: event.target.value.trim() });
+        }));
+        rows.querySelectorAll('.interview-date').forEach(input => input.addEventListener('change', event => {
+          const date = event.target.value.trim();
+          if (date && !isValidMonthDay(date)) {
+            event.target.value = remoteInterviewDates[event.target.dataset.id] || '';
+            saveNote.innerHTML = 'Use a valid <strong>MM/DD</strong> interview date, such as 10/01.';
+            return;
+          }
+          saveInterviewDate(event.target.dataset.id, date);
+        }));
+        rows.querySelectorAll('.upload-missing').forEach(button => {
+          const fileInput = rows.querySelector(`.document-upload[data-id="${button.dataset.id}"][data-kind="${button.dataset.kind}"]`);
+          button.addEventListener('click', () => fileInput.click());
+          button.addEventListener('dragover', event => { event.preventDefault(); button.classList.add('dragging'); });
+          button.addEventListener('dragleave', () => button.classList.remove('dragging'));
+          button.addEventListener('drop', event => { event.preventDefault(); button.classList.remove('dragging'); uploadMissingDocument(button.dataset.id, button.dataset.kind, event.dataTransfer.files[0]); });
+          fileInput.addEventListener('change', () => uploadMissingDocument(button.dataset.id, button.dataset.kind, fileInput.files[0]));
+        });
+      };
+      const updateMetrics = () => {
+        const statuses = allApplications().map(currentStatus);
+        const count = predicate => statuses.filter(predicate).length;
+        document.getElementById('metric-total').textContent = statuses.length;
+        document.getElementById('metric-submitted').textContent = count(status => status === 'Application Submitted');
+        document.getElementById('metric-oa').textContent = count(status => status === 'OA Received');
+        document.getElementById('metric-interview').textContent = count(status => status === 'Interview Received');
+        document.getElementById('metric-rejected').textContent = count(status => status === 'Rejected');
+      };
+      const loadStatuses = async () => {
+        const { data, error } = await supabaseClient.from('application_statuses').select('application_id,status');
+        if (error) {
+          saveNote.innerHTML = 'Status storage is temporarily <strong>unavailable</strong>.';
+          return;
+        }
+        data.forEach(item => {
+          if (item.application_id.startsWith(FOLLOWUP_PREFIX)) {
+            const parsed = parseFollowupKey(item.application_id);
+            if (parsed) {
+              remoteFollowups[parsed.applicationId] = parsed.note;
+              remoteFollowupKeys[parsed.applicationId] = item.application_id;
+            }
+            return;
+          }
+          if (item.application_id.startsWith(INTERVIEW_DATE_PREFIX)) {
+            const parsed = parseInterviewDateKey(item.application_id);
+            if (parsed) {
+              remoteInterviewDates[parsed.applicationId] = parsed.value;
+              remoteInterviewDateKeys[parsed.applicationId] = item.application_id;
+            }
+            return;
+          }
+          remoteStatuses[item.application_id] = item.status;
+        });
+        render(); updateMetrics();
+      };
+      const loadDocuments = async () => {
+        const { data, error } = await supabaseClient
+          .from('application_documents')
+          .select('application_id,document_type,storage_path');
+        if (error) {
+          saveNote.innerHTML = 'Document records are temporarily <strong>unavailable</strong>.';
+          return;
+        }
+        data.forEach(item => {
+          remoteDocuments[item.application_id] ||= {};
+          remoteDocuments[item.application_id][item.document_type] = item.storage_path;
+        });
+        render();
+      };
+      const publicResumeUrl = path => path ? supabaseClient.storage.from('dashboard-resumes').getPublicUrl(path).data.publicUrl : null;
+      const loadDashboardMetadata = async () => {
+        const { data, error } = await supabaseClient.storage.from('dashboard-resumes').download(metadataPath);
+        if (error || !data) return;
+        try {
+          const saved = JSON.parse(await data.text());
+          Object.assign(dashboardMetadata.followups, saved.followups || {});
+          Object.assign(dashboardMetadata.resumes, saved.resumes || {});
+          Object.assign(dashboardMetadata.coverLetters, saved.coverLetters || {});
+        } catch (_) {
+          // Keep the dashboard usable if an old metadata file is unreadable.
+        }
+      };
+      const saveDashboardMetadata = async () => {
+        const body = new Blob([JSON.stringify(dashboardMetadata)], { type: 'application/json' });
+        const { error } = await supabaseClient.storage.from('dashboard-resumes').upload(metadataPath, body, {
+          cacheControl: '3600', contentType: 'application/json', upsert: true
+        });
+        if (error) throw error;
+      };
+      const saveFollowup = async (applicationId, followup) => {
+        saveNote.innerHTML = 'Saving <strong>OA follow-up</strong>…';
+        const previousKey = remoteFollowupKeys[applicationId];
+        const nextKey = followupKey(applicationId, followup.note);
+        try {
+          const request = previousKey
+            ? supabaseClient.from('application_statuses').update({ application_id: nextKey, status: 'OA Received' }).eq('application_id', previousKey)
+            : supabaseClient.from('application_statuses').insert({ application_id: nextKey, status: 'OA Received' });
+          const { error } = await request;
+          if (error) throw error;
+          remoteFollowups[applicationId] = followup.note;
+          remoteFollowupKeys[applicationId] = nextKey;
+          saveNote.innerHTML = 'OA follow-up saved <strong>in the database</strong>.';
+          render();
+        } catch (_) {
+          saveNote.innerHTML = 'Could not save the OA follow-up. Please <strong>sign in again</strong>.';
+        }
+      };
+      const saveInterviewDate = async (applicationId, date) => {
+        saveNote.innerHTML = 'Saving <strong>interview date</strong>…';
+        const previousKey = remoteInterviewDateKeys[applicationId];
+        const nextKey = interviewDateKey(applicationId, date);
+        try {
+          const request = previousKey
+            ? supabaseClient.from('application_statuses').update({ application_id: nextKey, status: 'Interview Received' }).eq('application_id', previousKey)
+            : supabaseClient.from('application_statuses').insert({ application_id: nextKey, status: 'Interview Received' });
+          const { error } = await request;
+          if (error) throw error;
+          remoteInterviewDates[applicationId] = date;
+          remoteInterviewDateKeys[applicationId] = nextKey;
+          saveNote.innerHTML = 'Interview date saved <strong>in the database</strong>.';
+          render();
+        } catch (_) {
+          saveNote.innerHTML = 'Could not save the interview date. Please <strong>sign in again</strong>.';
+        }
+      };
+      const uploadMissingDocument = async (applicationId, kind, file) => {
+        if (!file) return;
+        const label = kind === 'resume' ? 'resume' : 'cover letter';
+        const documentType = kind === 'resume' ? 'resume' : 'cover_letter';
+        if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+          saveNote.innerHTML = `Please choose a <strong>PDF</strong> ${label}.`;
+          return;
+        }
+        if (file.size > 10 * 1024 * 1024) {
+          saveNote.innerHTML = `The ${label} PDF must be <strong>10 MB or smaller</strong>.`;
+          return;
+        }
+        saveNote.innerHTML = `Uploading <strong>${label} PDF</strong>…`;
+        try {
+          const path = await uploadDocument(file, kind);
+          await saveDocumentRecord(applicationId, documentType, path);
+          remoteDocuments[applicationId] ||= {};
+          remoteDocuments[applicationId][documentType] = path;
+          saveNote.innerHTML = `${label[0].toUpperCase() + label.slice(1)} PDF saved <strong>permanently</strong>.`;
+          render();
+        } catch (_) {
+          saveNote.innerHTML = `Could not upload the ${label}. Please <strong>sign in again</strong>.`;
+        }
+      };
+      const loadCustomApplications = async () => {
+        const { data, error } = await supabaseClient
+          .from('custom_applications')
+          .select('id,submitted_date,company,role,application_url,resume_path,status')
+          .order('submitted_date', { ascending: true });
+        if (error) {
+          saveNote.innerHTML = 'Application records are temporarily <strong>unavailable</strong>.';
+          return;
+        }
+        customApplications.splice(0, customApplications.length, ...data.map(item => {
+          const market = item.company.startsWith(HK_PREFIX) ? 'HK' : 'US';
+          return {
+          id: `custom-${item.id}`,
+          date: item.submitted_date,
+          company: market === 'HK' ? item.company.slice(HK_PREFIX.length) : item.company,
+          role: item.role,
+          url: item.application_url,
+          resumeUrl: publicResumeUrl(item.resume_path),
+          status: item.status,
+          market
+          };
+        }));
+        render(); updateMetrics();
+      };
+      const saveStatus = async (applicationId, status) => {
+        saveNote.innerHTML = 'Saving <strong>permanently</strong>…';
+        const { error } = await supabaseClient.from('application_statuses').upsert(
+          { application_id: applicationId, status }, { onConflict: 'application_id' }
+        );
+        if (error) {
+          saveNote.innerHTML = 'Could not save status. Please <strong>sign in again</strong>.';
+          render();
+          return;
+        }
+        remoteStatuses[applicationId] = status;
+        saveNote.innerHTML = 'Status saved <strong>permanently</strong>.';
+        render(); updateMetrics();
+      };
+      const resetEntryForm = () => {
+        entryForm.reset();
+        entryDate.value = new Date().toISOString().slice(0, 10);
+        dropZone.textContent = 'Drop a resume PDF here, or click to choose one';
+        dropZone.append(resumeFile);
+        coverLetterDropZone.textContent = 'Drop a cover letter PDF here, or click to choose one';
+        coverLetterDropZone.append(coverLetterFile);
+        formHelp.textContent = 'Both PDFs are optional; files are limited to 10 MB and published as “Open PDF ↗” links.';
+      };
+      const setDocumentFile = (file, kind) => {
+        if (!file) return;
+        const label = kind === 'resume' ? 'resume' : 'cover letter';
+        const input = kind === 'resume' ? resumeFile : coverLetterFile;
+        const zone = kind === 'resume' ? dropZone : coverLetterDropZone;
+        if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+          formHelp.textContent = 'Please choose a PDF file.';
+          return;
+        }
+        if (file.size > 10 * 1024 * 1024) {
+          formHelp.textContent = 'The PDF must be 10 MB or smaller.';
+          return;
+        }
+        const transfer = new DataTransfer();
+        transfer.items.add(file);
+        input.files = transfer.files;
+        zone.textContent = `Selected ${label}: ${file.name}`;
+        zone.append(input);
+        formHelp.textContent = `${label[0].toUpperCase() + label.slice(1)} PDF ready to upload when you save the application.`;
+      };
+      const uploadDocument = async (file, kind) => {
+        if (!file) return null;
+        const safeName = file.name.replace(/[^a-zA-Z0-9._-]+/g, '-').replace(/^-+|-+$/g, '') || `${kind}.pdf`;
+        const folder = kind === 'resume' ? 'resumes' : 'cover-letters';
+        const path = `${folder}/${crypto.randomUUID()}-${safeName}`;
+        const { error } = await supabaseClient.storage.from('dashboard-resumes').upload(path, file, {
+          cacheControl: '3600', contentType: 'application/pdf', upsert: false
+        });
+        if (error) throw error;
+        return path;
+      };
+      const saveDocumentRecord = async (applicationId, documentType, storagePath) => {
+        const { error } = await supabaseClient.from('application_documents').upsert(
+          { application_id: applicationId, document_type: documentType, storage_path: storagePath },
+          { onConflict: 'application_id,document_type' }
+        );
+        if (error) throw error;
+      };
+      const openEntryForm = () => {
+        resetEntryForm();
+        entryForm.hidden = false;
+        entryCompany.focus();
+      };
+      addApplication.addEventListener('click', openEntryForm);
+      cancelEntry.addEventListener('click', () => { entryForm.hidden = true; resetEntryForm(); });
+      const bindDocumentDropZone = (zone, input, kind) => {
+        zone.addEventListener('click', () => input.click());
+        zone.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); input.click(); } });
+        zone.addEventListener('dragover', event => { event.preventDefault(); zone.classList.add('dragging'); });
+        zone.addEventListener('dragleave', () => zone.classList.remove('dragging'));
+        zone.addEventListener('drop', event => {
+          event.preventDefault(); zone.classList.remove('dragging'); setDocumentFile(event.dataTransfer.files[0], kind);
+        });
+        input.addEventListener('change', () => setDocumentFile(input.files[0], kind));
+      };
+      bindDocumentDropZone(dropZone, resumeFile, 'resume');
+      bindDocumentDropZone(coverLetterDropZone, coverLetterFile, 'cover-letter');
+      entryForm.addEventListener('submit', async event => {
+        event.preventDefault();
+        if (!isOwner()) return;
+        const company = entryCompany.value.trim();
+        const role = entryRole.value.trim();
+        const url = entryUrl.value.trim();
+        if (!entryDate.value || !company || !role) return;
+        saveEntry.disabled = true;
+        formHelp.textContent = 'Saving application permanently…';
+        try {
+          const resumePath = await uploadDocument(resumeFile.files[0], 'resume');
+          const coverLetterPath = await uploadDocument(coverLetterFile.files[0], 'cover-letter');
+          const { data, error } = await supabaseClient.from('custom_applications').insert({
+            submitted_date: entryDate.value, company: currentMarket === 'HK' ? `${HK_PREFIX}${company}` : company, role,
+            application_url: url || null, resume_path: resumePath, status: 'Application Submitted'
+          }).select('id').single();
+          if (error) throw error;
+          if (data?.id) {
+            const applicationId = `custom-${data.id}`;
+            const documentWrites = [];
+            if (resumePath) documentWrites.push(saveDocumentRecord(applicationId, 'resume', resumePath));
+            if (coverLetterPath) documentWrites.push(saveDocumentRecord(applicationId, 'cover_letter', coverLetterPath));
+            await Promise.all(documentWrites);
+          }
+          entryForm.hidden = true;
+          await loadCustomApplications();
+          saveNote.innerHTML = 'Application saved <strong>permanently</strong>.';
+          resetEntryForm();
+        } catch (error) {
+          formHelp.textContent = 'Could not save this application. Please sign in again and retry.';
+        } finally {
+          saveEntry.disabled = false;
+        }
+      });
+      marketUs.addEventListener('click', () => { currentMarket = 'US'; entryForm.hidden = true; updateMarketUi(); render(); updateMetrics(); });
+      marketHk.addEventListener('click', () => { currentMarket = 'HK'; entryForm.hidden = true; updateMarketUi(); render(); updateMetrics(); });
+      sendLink.addEventListener('click', async () => {
+        const email = authEmail.value.trim().toLowerCase();
+        if (email !== OWNER_EMAIL) {
+          saveNote.innerHTML = 'Use the configured <strong>Cornell owner email</strong> to edit.';
+          return;
+        }
+        sendLink.disabled = true;
+        const { error } = await supabaseClient.auth.signInWithOtp({
+          email,
+          options: { emailRedirectTo: window.location.origin + window.location.pathname }
+        });
+        sendLink.disabled = false;
+        saveNote.innerHTML = error
+          ? 'Could not send the sign-in link. Please try again.'
+          : 'Check your Cornell inbox for the <strong>sign-in link</strong>.';
+      });
+      signOut.addEventListener('click', async () => {
+        await supabaseClient.auth.signOut();
+        session = null;
+        updateAuthUi(); render();
+      });
+      supabaseClient.auth.onAuthStateChange((_event, nextSession) => {
+        session = nextSession;
+        updateAuthUi(); render();
+      });
+      (async () => {
+        const { data: { session: initialSession } } = await supabaseClient.auth.getSession();
+        session = initialSession;
+        updateAuthUi();
+        updateMarketUi();
+        await Promise.all([loadStatuses(), loadDocuments(), loadCustomApplications(), loadDashboardMetadata()]);
+        render();
+        updateMetrics();
+      })();
+    </script>
+  </body>
+</html>
