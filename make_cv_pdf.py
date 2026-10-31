@@ -4,7 +4,7 @@ only (1) rewrites bullet text per target role, (2) adds the HK phone to the cont
 Every output is exactly 1 page (the original is 1 page and line counts are preserved)."""
 import fitz, os, json
 
-SRC = r"C:\Users\HUAWEI\Desktop\Xu_Jingxiang_Resume Book.pdf"
+SRC = r"C:\Users\HUAWEI\Desktop\大学申请\Xu_Jingxiang_Resume Book.pdf"
 OUT_DIR = r"D:\zcode\hk-dashboard\cv"
 TEXT_FONT_SIZE = 10.1
 BULLET_X = 48.9
@@ -184,12 +184,26 @@ CONFIG = [    ("Flow_Traders","trading"), ("Squarepoint","quant"),
  ("Lingjun","quant"), ("Wizard_Quant","quant"), ("Dymon_Asia","quant"), ("Bastion","trading"), ("TSY","quant"), ("XY_Capital","quant"), ("EngineersGate_HK","quant"), ("CenturyFrontier","quant"),
  ("Jump_Trading","trading"), ("Virtu_QR","trading"), ("Virtu_QT","trading"), ("TransMarket","trading"), ("Voloridge","quant"), ("BlackEdge","trading"), ("Anthelion","quant"), ("Stevens_Capital","quant"), ("AllOptions","trading"), ("GroupOne","trading"), ("Kershner","trading"), ("PEAK6","trading"), ("YIntercept","quant"), ("Tower_Research","trading"), ("HRT","trading"),
  ("Bank_of_America_GQS","bank"), ("Bank_of_America_Markets","trading"),  ("Goldman_Sachs_Strats","bank"),
- ("JPMorgan_MarketsQR","trading"), 
+ ("JPMorgan_MarketsQR","trading"),
  ("Citi","bank"), ("OldMission","bank"), ("Quantbot_QD","bank"), ("InfiniteQuant","bank"), ("Quantic","bank"), ("JPM_US_AMQR","quant"),  ("Point72","quant"),
-    
+ # ---- 2026-10-31 round-2 HK targets ----
+ ("Tower_Research_HK","quant"), ("Jump_Trading_HK","trading"),
+
 ]
 
+if __name__ == "__main__":
+    import sys
+    todo = [(s, v) for s, v in CONFIG if not sys.argv[1:] or s in sys.argv[1:]]
+    if sys.argv[1:] and not todo:
+        raise SystemExit("no matching slugs in CONFIG: %s" % sys.argv[1:])
+else:
+    todo = CONFIG
+
 PHONE_TEXT = "+852 6810 9521 / 607-882-5108"
+# IANG note goes on the empty line between the contact line and EDUCATION (baseline y=81.12)
+IANG_TEXT = "Authorized to work in Hong Kong: IANG visa (valid through 30 July 2028)"
+IANG_GAP_Y = 81.1200180053711
+IANG_GAP_X = 36.0
 
 def wrap(text, maxw, maxlines):
     words = text.split()
@@ -237,6 +251,7 @@ def build(slug, variant):
     px = phone_span["origin"][0]
     px = min(px, RIGHT_EDGE - tlen(PHONE_TEXT))
     tw.append(fitz.Point(px, phone_span["origin"][1]), PHONE_TEXT, font=font, fontsize=TEXT_FONT_SIZE)
+    tw.append(fitz.Point(IANG_GAP_X, IANG_GAP_Y), IANG_TEXT, font=font, fontsize=TEXT_FONT_SIZE)
     # 4) insert bullets
     for k, ys in BLOCKS.items():
         maxlines = len(ys)
@@ -251,9 +266,10 @@ def build(slug, variant):
     return out
 
 os.makedirs(OUT_DIR, exist_ok=True)
-for slug, variant in CONFIG:
+for slug, variant in todo:
     out = build(slug, variant)
     check = fitz.open(out)
     assert len(check) == 1, out
     check.close()
-print("generated", len(CONFIG), "one-page CVs (in-place edits of the original)")
+    print("ok", slug)
+print("generated %d one-page CVs (in-place edits of the original)" % len(todo))
