@@ -1,0 +1,10 @@
+Bastion application form - 3 short answers (300 char limit each)
+
+Q1 Why do you want to work at Bastion?
+Employee-owned, founder-capital, non-hierarchical: interns take real responsibility early. Bastion trades global markets including digital assets, where my live Polymarket experience (mispricing research, order-book pipeline, realized P&L) transfers directly. Your meritocratic culture is how I work.
+
+Q2 Why are you interested in prop trading as a career?
+I want research to settle into P&L, not slide decks. I have traded prediction markets live: scanning order books, ranking expected value, enforcing limits, booking results. Prop trading rewards that exact loop - own the idea, own the risk, own the outcome - with speed and autonomy nothing else has.
+
+Q3 What role are you applying for and how do you think you are a good fit?
+Trading & Quant internship. Production-proven research: 82.6% hit rate forecasting Hang Seng rebalances (Dymon Asia); factor backtests (+6% annualized return, +0.3 Sharpe, Nine Martingale); self-built Polymarket pipeline. First Class Honours Maths (HKU), now Cornell MFE, HK-based with IANG.
